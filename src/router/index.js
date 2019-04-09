@@ -7,7 +7,11 @@ import message from '@/initial/message'
 import education from '@/initial/education'
 import overview from '@/initial/overview'
 import my from '@/initial/my'
-
+import announcement from '@/initial/page/announcement'
+import leaveWord from '@/initial/page/leaveWord'
+import Contact_us from '@/initial/page/Contact_us'
+import evaluation from '@/initial/page/evaluation'
+import library from '@/initial/page/library'
 Vue.use(Router)
 
 export default new Router({
@@ -46,6 +50,31 @@ export default new Router({
       path: '/foot',
       name: 'foot',
       component: foot
+    },
+    {
+      path: '/announcement',
+      name: 'announcement',
+      component: announcement
+    },
+    {
+      path: '/leaveWord',
+      name: 'leaveWord',
+      component: leaveWord
+    },
+    {
+      path: '/Contact_us',
+      name: 'Contact_us',
+      component: Contact_us
+    },
+    {
+      path: '/evaluation',
+      name: 'evaluation',
+      component: evaluation
+    },{
+      path: '/library',
+      name: 'library',
+      component: library
     }
+
   ]
 })
