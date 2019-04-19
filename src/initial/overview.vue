@@ -1,27 +1,31 @@
 <template>
   <div class="overview">
-    <top :msg="msg"></top>
+    <top :msg="msg" :back="back"></top>
     <div class="nav">
-      <div style="backgroundColor:#2a8cf7;"><i class="iconfont icon-xuexiaoqingkuang"></i><span>在校情况</span></div>
-      <div style="backgroundColor:#ef7b42;"><i class="iconfont icon-kechengbiao"></i><span>课程表</span></div>
-      <div style="backgroundColor:#4da2c7;"><i class="iconfont icon-zuoye"></i><span>当天作业</span></div>
-      <div style="backgroundColor:#63d4c0;"><i class="iconfont icon-jiajiang"></i><span>获得嘉奖</span></div>
-      <div style="backgroundColor:#d15fbf;"><i class="iconfont icon-baobiao"></i><span>学情报表</span></div>
-      <div style="backgroundColor:#4c48e5;"><i class="iconfont icon-tushuguan"></i><span>家长图书馆</span></div>
+      <router-link to="Situation"><div style="backgroundColor:#2a8cf7;"><i class="iconfont icon-xuexiaoqingkuang"></i><span>在校情况</span></div></router-link>
+      <router-link to="Schedule"><div style="backgroundColor:#ef7b42;"><i class="iconfont icon-kechengbiao"></i><span>课程表</span></div></router-link>
+      <router-link to="homework"><div style="backgroundColor:#4da2c7;"><i class="iconfont icon-zuoye"></i><span>当天作业</span></div></router-link>
+      <router-link to="Commendation"><div style="backgroundColor:#63d4c0;"><i class="iconfont icon-jiajiang"></i><span>获得嘉奖</span></div></router-link>
+      <router-link to="Report"><div style="backgroundColor:#d15fbf;"><i class="iconfont icon-baobiao"></i><span>学情报表</span></div></router-link>
+      <router-link to="library"><div style="backgroundColor:#4c48e5;"><i class="iconfont icon-tushuguan"></i><span>家长图书馆</span></div></router-link>
     </div>
+    <foot :current="current"></foot>
   </div>
 </template>
 
 <script>
 import top from "@/components/top";
+import foot from '@/components/foot'
 export default {
   name: "overview",
   components: {
-    top
+    top,foot
   },
   data() {
     return {
-      msg: "学情总览"
+      msg: "学情总览",
+      back:false,
+      current:3
     };
   }
 };
@@ -31,13 +35,15 @@ export default {
 <style scoped lang="scss">
 .overview {
   width: 100%;
+  margin-top: 128px;
   .nav {
     width: 100%;
     margin-top: 40px;
     margin-bottom: 100px;
+    padding: 0px 45px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
     div {
       width: 300px;
       height: 300px;
@@ -46,7 +52,7 @@ export default {
       align-items: center;
       justify-content: center;
       border-radius: 20px;
-      margin-right: 50px;
+      // margin-right: 50px;
       margin-bottom: 30px;
       box-shadow: inset 0px 0px 32px rgba(102, 102, 102, 1), 0px 0px 16px rgba(0, 0, 0, 0.5);
       i {
@@ -59,8 +65,8 @@ export default {
         color: #fff;
       }
     }
-    div:nth-child(2n){
-      margin-right: 0px;
+    div:active {
+      box-shadow: inset 0px 0px 32px rgba(0, 0, 0, 1),0px 0px 256px rgba(255,0,0,1);
     }
   }
 }

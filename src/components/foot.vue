@@ -1,6 +1,6 @@
 <template>
   <div class="foot">
-    <div class="foot_box" v-for="(item,index) in footnav" :key="index" :class="{'color':current == index}" @click="footclick(index)">
+    <div class="foot_box" v-for="(item,index) in footnav" :key="index" :class="{'color':current == index}">
       <router-link :to="item.to">
         <div class="up iconfont" :class="item.icon"></div>
         <div class="down">{{item.text}}</div>
@@ -12,9 +12,16 @@
 <script>
 export default {
   name: 'foot',
+  props:{
+      current:{
+          type: Number,
+          default: function () {
+              return {}
+          }
+      }
+  },
   data () {
     return {
-      current:0,
       footnav:[
         {icon:'icon-tongxunlu',text:'家校通',to:'/'},
         {icon:'icon-pinglun',text:'信息通知',to:'message'},
@@ -25,9 +32,6 @@ export default {
     }
   },
   methods:{
-    footclick(index) {
-      this.current = index
-    }
   }
 }
 </script>
@@ -38,7 +42,7 @@ export default {
   position: fixed;
   bottom: 0px;
   width: 100%;
-  height: 88px;
+  height: 108px;
   display: flex;
   box-shadow: 0px 0px 15px #999;
   background-color: #fff;
@@ -57,10 +61,11 @@ export default {
       align-items: center;
     }
     .up {
-      font-size: 44px;
+      font-size: 48px;
+      margin-bottom: 10px;
     }
     .down {
-      font-size: 20px;
+      font-size: 24px;
     }
   }
   .color {

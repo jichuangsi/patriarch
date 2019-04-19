@@ -1,44 +1,52 @@
 <template>
-  <div class="message">
+  <div class="Commendation">
     <top :msg ="msg" :back="back"></top>
     <div class="center">
         <div class="center_nav">
             <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}" @click="subject(index)">{{item}}</div>
         </div>
-        <div class="center_box" v-for="(item,index) in message_nav" :key="index" @click="jump(item)">
-            <div class="left" :class="{'orange':item.color == 0,'cyan':item.color == 1,'blue':item.color == 2}">
-                <div class="iconfont" :class="item.icon"></div>
+        <div class="center_box" v-for="(item,index) in message_nav" :key="index">
+            <div class="left">
+                <img src="../../assets/img/语文_03.png" alt="" v-if="item.color==0">
+                <img src="../../assets/img/数学_03.png" alt="" v-if="item.color==1">
+                <img src="../../assets/img/英语_03.png" alt="" v-if="item.color==2">
+                <img src="../../assets/img/物理_03.png" alt="" v-if="item.color==3">
+                <img src="../../assets/img/地理_03.png" alt="" v-if="item.color==4">
+                <img src="../../assets/img/政治_03.png" alt="" v-if="item.color==5">
+                <img src="../../assets/img/历史_03.png" alt="" v-if="item.color==6">
+                <img src="../../assets/img/生物_03.png" alt="" v-if="item.color==7">
+                <img src="../../assets/img/化学_03.png" alt="" v-if="item.color==9">
             </div>
             <div class="right">
                 <div class="title">{{item.message}}</div>
                 <div class="text">2019年3月7日星期四18：06</div>
-                <div class="details">查看详情</div>
+                <div class="details">
+                    <div class="status">{{item.status}}</div>
+                    <div class="statustext">{{item.title}}</div>
+                </div>
             </div>
         </div>
     </div>
-    <foot :current="current"></foot>
   </div>
 </template>
 
 <script>
 import top from '@/components/top'
-import foot from '@/components/foot'
 export default {
-  name: 'message',
+  name: 'Commendation',
   components: {
-    top,foot
+    top
   },
   data () {
     return {
-      msg:'信息通知',
-      back:false,
-      current: 1,
+      msg:'获得嘉奖',
+      back:true,
       navindex:0,
-      center_nav:['全部','系统通知','校园通知','家校通'],
+      center_nav:['课堂嘉奖','习题嘉奖','考试嘉奖','期末评语'],
       message_nav:[
-          {icon:'icon-tongzhi',color:'0',message:'系统通知:弓长张同学离校签到'},
-          {icon:'icon-liaotian',color:'1',message:'教师金灿灿回复:好的，了解...'},
-          {icon:'icon-xiaoyuanzhuanqu',color:'2',message:'校园通知:植树节活动通知'},
+          {color:'0',message:'习题：背影课文预习',status:'优',title:'考试嘉奖'},
+          {color:'1',message:'习题：背影课文预习',status:'优',title:'课堂嘉奖'},
+          {color:'2',message:'习题：背影课文预习',status:'优',title:'习题嘉奖'},
       ]
     }
   },
@@ -46,11 +54,6 @@ export default {
 
   },
   methods:{
-      jump(item){
-          if(item.color == '2'){
-              this.$router.push({path:'/announcement'})
-          }
-      },
       subject(index){
           this.navindex = index
       }
@@ -60,7 +63,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.message {
+.Commendation {
   width: 100%;
   margin-top: 88px;
   .center {
@@ -96,21 +99,10 @@ export default {
               height: 100px;
               line-height: 100px;
               border-radius: 20px;
-              background-color: #ef7c3d;
-              div {
-                font-size: 52px;
-                text-align: center;
-                color: #fff;
+              img {
+                  width: 100%;
+                  height: 100%;
               }
-          }
-          .orange {
-              background-color: #ef7c3d;
-          }
-          .cyan {
-              background-color: #69d4c4;
-          }
-          .blue {
-              background-color: #464fd2;
           }
           .right {
               flex: 1;
@@ -136,14 +128,29 @@ export default {
               }
               .details {
                   position: absolute;
-                  top: 39px;
+                  top: 0px;
                   right: 0px;
-                  padding: 5px 20px;
-                  border-radius: 15px;
-                  background-color: #3d72fe;
-                  color: #fff;
-                  font-size: 20px;
-                  font-weight: 500;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  .status {
+                      width: 33px;
+                      height: 33px;
+                      line-height: 33px;
+                      text-align: center;
+                      font-size: 24px;
+                      color: #fff;  
+                      border-radius: 50%;
+                      background-color: #69d4c4;
+                  }
+                  .statustext {
+                      margin-top: 10px;
+                      color: #666;
+                  }
+                .orange {
+                    background-color: #ef7c3d;
+                }
               }
           }
       }

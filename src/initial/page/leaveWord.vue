@@ -1,19 +1,32 @@
 <template>
   <div class="index">
-    <top :msg="msg"></top>
+    <top
+      :msg="msg"
+      :back="back"
+    ></top>
     <div class="center">
       <div class="nav">
         <div class="nav_box">
           <div class="left"></div>
           <div class="right">
-            <div class="name">老师姓名：金灿灿</div>
-            <div class="subject">任教科目：数学</div>
-            <div class="label">班主任</div>
-            <div class="message">给老师留言 ></div>
+            <div class="name">老师姓名：{{teacher.name}}</div>
+            <div class="subject">任教科目：{{teacher.subject}}</div>
+            <div class="label" v-if="teacher.headMaster == '班主任'">班主任</div>
+            <!-- <div class="message">给老师留言 ></div> -->
           </div>
         </div>
       </div>
+      <div class="message clearfix">
+        <div class="messagebox">
+          <div class="userimg"></div>
+          <div class="message_box"></div>
+        </div>
+      </div>
     </div>
+      <div class="ipt">
+        <input type="text" v-model="messagetext">
+        <div class="iptbtn" @click="btn">留言</div>
+      </div>
   </div>
 </template>
 <script>
@@ -25,14 +38,27 @@ export default {
   },
   data() {
     return {
-      msg: "留言"
+      msg: "家校通",
+      back: true,
+      teacher:'',
+      messagelist:[]
     };
+  },
+  mounted() {
+    this.teacher = this.$store.state.teacher
+    console.log(this.$store.state.teacher)
+  },
+  methods:{
+    btn(){
+
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
 .index {
   width: 100%;
+  margin-top: 88px;
   .center {
     padding: 30px 45px 100px 45px;
     .nav {
@@ -88,6 +114,33 @@ export default {
         }
       }
     }
+    .message {
+      width: 100%;
+    }
   }
+    .ipt {
+      width: 100%;
+      position: fixed;
+      bottom: 0px;
+      padding: 14px 45px;
+      background-color: #e8e8e8;
+      box-shadow: 0px -4px 8px rgba(0,0,0,0.3);
+      display: flex;
+      input {
+        flex: 1;
+        border-radius: 10px;
+        // box-shadow: inset 6px 10px 16px #999;
+        background-color: #fff;
+        text-indent: 20px;
+      }
+      .iptbtn {
+        font-size: 20px;
+        padding: 20px 40px;
+        color: #fff;
+        border-radius: 30px;
+        background-color: #3d72fe;
+        margin-left: 20px;
+      }
+    }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <top :msg="msg"></top>
+    <top :msg="msg" :back="back"></top>
     <div class="center">
       <div class="nav">
         <div class="nav_box">
@@ -30,7 +30,8 @@ export default {
   },
   data() {
     return {
-      msg: "期末评语：初一上学期"
+      msg: "期末评语：初一上学期",
+      back:true
     };
   }
 };
@@ -38,6 +39,7 @@ export default {
 <style lang="scss" scoped>
 .index {
   width: 100%;
+  margin-top: 88px;
   .center {
     padding: 30px 45px 100px 45px;
     .nav {

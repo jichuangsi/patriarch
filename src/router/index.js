@@ -12,6 +12,14 @@ import leaveWord from '@/initial/page/leaveWord'
 import Contact_us from '@/initial/page/Contact_us'
 import evaluation from '@/initial/page/evaluation'
 import library from '@/initial/page/library'
+import bookdetails from '@/initial/page/bookdetails'
+import Growth from '@/initial/page/Growth'
+import homework from '@/initial/page/homework'
+import Commendation from '@/initial/page/Commendation'
+import Situation from '@/initial/page/Situation'
+import set from '@/initial/page/set'
+import Report from '@/initial/page/Report'
+import Schedule from '@/initial/page/Schedule'
 Vue.use(Router)
 
 export default new Router({
@@ -74,7 +82,38 @@ export default new Router({
       path: '/library',
       name: 'library',
       component: library
+    },{
+      path: '/bookdetails',
+      name: 'bookdetails',
+      component: bookdetails
+    },{
+      path: '/Growth',
+      name: 'Growth',
+      component: Growth
+    },{
+      path: '/homework',
+      name: 'homework',
+      component: homework
+    },{
+      path: '/Commendation',
+      name: 'Commendation',
+      component: Commendation
+    },{
+      path: '/Situation',
+      name: 'Situation',
+      component: Situation
+    },{
+      path: '/set',
+      name: 'set',
+      component: set
+    },{
+      path: '/Report',
+      name: 'Report',
+      component: Report
+    },{
+      path: '/Schedule',
+      name: 'Schedule',
+      component: Schedule
     }
-
   ]
 })

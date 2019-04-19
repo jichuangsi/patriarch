@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <top :msg="msg"></top>
+    <top :msg="msg" :back="back"></top>
     <div class="center">
       <div class="title">{{title}}</div>
       <div class="content">
@@ -27,7 +27,8 @@ export default {
   data() {
     return {
       msg: "联系我们",
-      title: "给我们留言："
+      title: "给我们留言：",
+      back:true
     };
   }
 };
@@ -35,6 +36,7 @@ export default {
 <style lang="scss" scoped>
 .index {
   width: 100%;
+  margin-top: 88px;
   .center {
     padding: 30px;
     .title {

@@ -1,6 +1,6 @@
 <template>
   <div class="education">
-    <top :msg ="msg"></top>
+    <top :msg ="msg" :back="back"></top>
     <div class="search iconfont icon-sousuo"></div>
         <div class="swipe">
         <mt-swipe :auto="4000">
@@ -12,8 +12,8 @@
     <div class="center">
         <div class="center_box">
             <div class="top">
-                <div class="left" @click="current = 1" :class="{left_top:current==1}">教育头条</div>
-                <div class="right" @click="current = 2" :class="{right_top:current==2}">家长课堂</div>
+                <div class="left" @click="btn = 1" :class="{left_top:btn==1}">教育头条</div>
+                <div class="right" @click="btn = 2" :class="{right_top:btn==2}">家长课堂</div>
             </div>
             <div class="down">
                 <div class="left"></div>
@@ -34,23 +34,27 @@
             </div>
         </div>
     </div>
+    <foot :current="current"></foot>
   </div>
 </template>
 
 <script>
 import top from '@/components/top'
+import foot from '@/components/foot'
 import { Swipe, SwipeItem } from 'mint-ui'
 export default {
   name: 'education',
   components: {
     top,
     Swipe,
-    SwipeItem
+    SwipeItem,foot
   },
   data () {
     return {
       msg:'教育头条',
-      current:1,
+      back:false,
+      current:2,
+      btn:1
     }
   }
 }
@@ -60,6 +64,7 @@ export default {
 <style scoped lang="scss">
 .education {
   width: 100%;
+  margin-top: 118px;
   position: relative;
   .search {
       position: absolute;
@@ -169,6 +174,7 @@ export default {
                     }
                     .text {
                         font-size: 20px;
+                        line-height: 24px;
                         font-weight: 700;
                         color: #808080;
                         margin: 18px 0px;

@@ -2,17 +2,17 @@
   <div id="app">
     <!-- <top></top> -->
     <router-view/>
-    <foot></foot>
+    <!-- <foot></foot> -->
   </div>
 </template>
 
 <script>
 // import top from '@/components/top'
-import foot from '@/components/foot'
+// import foot from '@/components/foot'
 export default {
   name: 'App',
   components: {
-    foot
+    // foot
   }
 }
 </script>
