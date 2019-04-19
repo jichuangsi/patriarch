@@ -20,6 +20,7 @@ import Situation from '@/initial/page/Situation'
 import set from '@/initial/page/set'
 import Report from '@/initial/page/Report'
 import Schedule from '@/initial/page/Schedule'
+import News from '@/initial/page/News'
 Vue.use(Router)
 
 export default new Router({
@@ -114,6 +115,10 @@ export default new Router({
       path: '/Schedule',
       name: 'Schedule',
       component: Schedule
+    },{
+      path: '/News',
+      name: 'News',
+      component: News
     }
   ]
 })

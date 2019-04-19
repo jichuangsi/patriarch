@@ -3,12 +3,16 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 const state = {
-  teacher: []
+  teacher: [],
+  message:[]
 }
 
 const mutations = {
   TEACHER (state, val) {
     state.teacher = val
+  },
+  MESSAGE (state, val) {
+    state.message = val
   }
 }
 

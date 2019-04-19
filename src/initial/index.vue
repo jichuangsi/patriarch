@@ -2,7 +2,7 @@
   <div class="index">
     <top :msg ="msg" :back="back"></top>
     <div class="center">
-      <div class="text" @click="zxc">{{student.className}}</div>
+      <div class="text">{{student.className}}</div>
       <div class="nav">
         <div class="nav_box" @click="jump(item)" v-for="(item,index) in teacherlist" :key="index">
           <div class="left"></div>
@@ -16,8 +16,6 @@
       </div>
       <button @click="btn">获取OPENID</button>
       <button @click="btn2">获取个人信息</button>
-      <button @click="btn3">获取个人信息</button>
-      <button @click="btn4">获取个人信息</button>
     </div>
     <div class="setbox" v-if="setshow">
       <div class="set_box">
@@ -39,7 +37,7 @@
 import top from '@/components/top'
 import foot from '@/components/foot'
 import { Toast } from 'mint-ui'
-import {getWxToken,getParentInfo,loginParentService,getBindStudentInfo,parentBindStudent,getStudentTeachers,data,details} from '@/api/api'
+import {getWxToken,getParentInfo,loginParentService,getBindStudentInfo,parentBindStudent,getStudentTeachers,getAttentions} from '@/api/api'
 export default {
   name: 'index',
   components: {
@@ -66,10 +64,6 @@ export default {
         path:'/leaveWord'
       })
     },
-    zxc() {  //第一次跳转获取code
-      // let Appid = 'wx124c0ab234287c8c'
-      window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://127.0.0.1&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
-    },
     btn(){  //第二次跳转获取code
       let Appid = 'wx124c0ab234287c8c'
       let code = window.location.href
@@ -78,12 +72,11 @@ export default {
         console.log(res)
         if(res.data.code == '0010') {
           localStorage.setItem('user',res.data.data.access_token+'&'+res.data.data.openid)
-          window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+Appid+'&redirect_uri=http://127.0.0.1&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
+          window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+Appid+'&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
         }
       })
     },
     btn2() {  //获取基本信息
-      let Appid = 'wx124c0ab234287c8c'
       let code = window.location.href
       let token = localStorage.getItem('user').split('&')[0]
       let openid = localStorage.getItem('user').split('&')[1]
@@ -105,23 +98,19 @@ export default {
                   }).catch(e=>{
                     console.log(e)
                   })
+                    getAttentions().then(res=>{
+                    console.log(res)
+                    if(res.data.code == '0010') {
+                      this.student = res.data.data
+                      localStorage.setItem('student',JSON.stringify(res.data.data))
+                    }
+                  })
                 }
               })
             }
           })
     },
-    btn3() {
-      data(1,0,10).then(res=>{
-        console.log(res)
-      })
-    },
-    btn4(){
-      details(88).then(res=>{
-        console.log(res)
-      })
-    },
     getdata(){
-      this.student = JSON.parse(localStorage.getItem('student'))[0]
       getStudentTeachers(this.student.studentId).then(res=>{
         console.log(res)
         if(res.data.code == '0010'){
@@ -148,7 +137,7 @@ export default {
   width: 100%;
   margin-top: 88px;
   .center {
-    padding: 30px 45px 100px 45px;
+    padding: 30px 45px 120px 45px;
     .text{
       text-align: center;
       font-size: 30px;

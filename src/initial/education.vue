@@ -12,22 +12,22 @@
     <div class="center">
         <div class="center_box">
             <div class="top">
-                <div class="left" @click="btn = 1" :class="{left_top:btn==1}">教育头条</div>
-                <div class="right" @click="btn = 2" :class="{right_top:btn==2}">家长课堂</div>
+                <div class="left" @click="educationbtn" :class="{left_top:btn==1}">教育头条</div>
+                <div class="right" @click="Parentbtn" :class="{right_top:btn==2}">家长课堂</div>
             </div>
-            <div class="down">
-                <div class="left"></div>
+            <div class="down" v-for="(item,index) in nav" :key="index" @click="jump(item)">
+                <div class="left">
+                    <img :src="item.picurl" alt="">
+                </div>
                 <div class="right">
-                    <div class="title">资讯标题一</div>
-                    <div class="text">
-                        资讯简要内容资讯简要内容资讯简要内容资
-                        讯简要内容资讯简要内容资讯
+                    <div class="title" v-html="item.title"></div>
+                    <div class="text" v-html="item.content">
                     </div>
                     <div class="nav">
-                            <div><i class="iconfont icon-liulan"></i><span>666</span></div>
-                            <div><i class="iconfont icon-dianzan"></i><span>666</span></div>
-                            <div><i class="iconfont icon-pinglun"></i><span>666</span></div>
-                            <div><i class="iconfont icon-shoucang"></i><span>666</span></div>
+                            <div><i class="iconfont icon-liulan"></i><span>{{item.view}}</span></div>
+                            <div><i class="iconfont icon-dianzan"></i><span>{{item.agree}}</span></div>
+                            <div><i class="iconfont icon-pinglun"></i><span>{{item.replynum}}</span></div>
+                            <div><i class="iconfont icon-shoucang"></i><span>0</span></div>
                     </div>
                     <div class="details">查看详情 ></div>
                 </div>
@@ -42,6 +42,7 @@
 import top from '@/components/top'
 import foot from '@/components/foot'
 import { Swipe, SwipeItem } from 'mint-ui'
+import {data} from '@/api/api'
 export default {
   name: 'education',
   components: {
@@ -54,8 +55,33 @@ export default {
       msg:'教育头条',
       back:false,
       current:2,
-      btn:1
+      btn:1,
+      pageindex:1,
+      pagesize:10,
+      nav:[]
     }
+  },
+  mounted(){
+      this.getdata()
+  },
+  methods:{
+      getdata() {
+          data(this.btn,this.pageindex,this.pagesize).then(res=>{
+              console.log(res)
+              this.nav = res.data
+          })
+      },
+      educationbtn(){
+          this.btn = 1
+          this.getdata()
+      },
+      Parentbtn(){
+          this.btn = 2
+          this.getdata()
+      },
+      jump(item){
+          this.$router.push({path:'/News',query:{id:item.id}})
+      }
   }
 }
 </script>
@@ -65,6 +91,7 @@ export default {
 .education {
   width: 100%;
   margin-top: 118px;
+  margin-bottom: 118px;
   position: relative;
   .search {
       position: absolute;
@@ -162,22 +189,37 @@ export default {
                     height: 180px;
                     border-radius: 10px;
                     background-color: #333;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
                 .right {
                     flex: 1;
                     margin-left: 29px;
                     .title {
+                        width: 200px;
+                        height: 34px;
+                        line-height: 34px;
                         font-size: 28px;
                         font-weight: 700;
                         color: #333;
                         margin-top: 30px;
+                        white-space: nowrap;
+                        text-overflow:ellipsis;
+                        overflow: hidden; 
                     }
                     .text {
+                        width: 400px;
+                        height: 50px;
                         font-size: 20px;
                         line-height: 24px;
                         font-weight: 700;
                         color: #808080;
                         margin: 18px 0px;
+                        white-space: nowrap;
+                        text-overflow:ellipsis;
+                        overflow: hidden; 
                     }
                     .nav {
                         div {

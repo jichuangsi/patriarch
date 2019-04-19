@@ -5,13 +5,19 @@
         <div class="center_nav">
             <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}" @click="subject(index)">{{item}}</div>
         </div>
-        <div class="center_box" v-for="(item,index) in message_nav" :key="index" @click="jump(item)">
-            <div class="left" :class="{'orange':item.color == 0,'cyan':item.color == 1,'blue':item.color == 2}">
-                <div class="iconfont" :class="item.icon"></div>
+        <div class="center_box" v-for="(item,index) in message_nav" :key="index" @click="jump(item)" v-if="status == item.noticeType || status ==''">
+            <div class="left" :class="{'orange':item.noticeType == 'S','cyan':item.noticeType == 'X','blue':item.noticeType == 'C'}">
+                <div class="iconfont" :class="{'icon-tongzhi':item.noticeType == 'S','icon-liaotian':item.noticeType == 'X','icon-xiaoyuanzhuanqu':item.noticeType == 'C'}"></div>
+                <i v-if="item.read == '0'"></i>
             </div>
             <div class="right">
-                <div class="title">{{item.message}}</div>
-                <div class="text">2019年3月7日星期四18：06</div>
+                <div class="title">
+                    <span v-if="item.noticeType=='S'">系统通知：</span>
+                    <span v-if="item.noticeType=='X'">老师消息：</span>
+                    <span v-if="item.noticeType=='C'">校园通知：</span>
+                    {{item.content}}
+                </div>
+                <div class="text">{{item.createdTime}}</div>
                 <div class="details">查看详情</div>
             </div>
         </div>
@@ -23,6 +29,7 @@
 <script>
 import top from '@/components/top'
 import foot from '@/components/foot'
+import {parentGetNewNotices,getNoticeByNoticeId} from '@/api/api'
 export default {
   name: 'message',
   components: {
@@ -35,25 +42,51 @@ export default {
       current: 1,
       navindex:0,
       center_nav:['全部','系统通知','校园通知','家校通'],
-      message_nav:[
-          {icon:'icon-tongzhi',color:'0',message:'系统通知:弓长张同学离校签到'},
-          {icon:'icon-liaotian',color:'1',message:'教师金灿灿回复:好的，了解...'},
-          {icon:'icon-xiaoyuanzhuanqu',color:'2',message:'校园通知:植树节活动通知'},
-      ]
+      message_nav:[],
+      status:''
     }
   },
   mounted () {
-
+      this.getdata()
   },
   methods:{
       jump(item){
-          if(item.color == '2'){
-              this.$router.push({path:'/announcement'})
-          }
+        getNoticeByNoticeId(item.id).then(res=>{
+            console.log(res)
+            if(res.data.code == '0010'){
+                this.$store.commit('MESSAGE',res.data.data)
+                this.$router.push({path:'/announcement'})
+            }else {
+                this.getdata()
+            }
+        })
       },
       subject(index){
           this.navindex = index
-      }
+          if(index == 0){
+            this.status = ''
+          } else if(index == 1){
+            this.status = 'S'
+          } else if(index == 2){
+            this.status = 'C'
+          } else if(index == 3){
+            this.status = 'X'
+          }
+      },
+      getdata(){
+          parentGetNewNotices().then(res=>{
+              console.log(res)
+              if(res.data.code == '0010'){
+                  this.message_nav = res.data.data
+                  for(let i = 0; i<this.message_nav.length;i++){
+                      this.message_nav[i].createdTime = this.getLocalTime(this.message_nav[i].createdTime/1000).split(' ')[0].split('/')[0]+'年'+this.getLocalTime(this.message_nav[i].createdTime/1000).split(' ')[0].split('/')[1]+'月'+this.getLocalTime(this.message_nav[i].createdTime/1000).split(' ')[0].split('/')[2]+'日'+' '+this.getLocalTime(this.message_nav[i].createdTime/1000).split(' ')[1]
+                  }
+              }
+          })
+      },
+    getLocalTime(nS) {     
+    return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+    }
   }
 }
 </script>
@@ -97,10 +130,21 @@ export default {
               line-height: 100px;
               border-radius: 20px;
               background-color: #ef7c3d;
+              position: relative;
               div {
                 font-size: 52px;
                 text-align: center;
                 color: #fff;
+              }
+              i {
+                  width: 15px;
+                  height: 15px;
+                  display: inline-block;
+                  position: absolute;
+                  right: 5px;
+                  top: 5px;
+                  border-radius: 50%;
+                  background-color: red;
               }
           }
           .orange {

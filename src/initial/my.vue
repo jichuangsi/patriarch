@@ -50,7 +50,7 @@ import top from '@/components/top'
 import foot from '@/components/foot'
 import Swiper from 'swiper';
 import {Toast} from 'mint-ui'
-import {getAttentions,updateAttention} from '@/api/api'
+import {updateAttention} from '@/api/api'
 export default {
   name: 'my',
   components: {
@@ -72,18 +72,9 @@ export default {
       observer:true,//修改swiper自己或子元素时，自动初始化swiper
       observeParents:true,//修改swiper的父元素时，自动初始化swiper
     }) 
-    this.getdata()
+    this.studentlist = JSON.parse(localStorage.getItem('student'))
   },
   methods:{
-    getdata () {
-      getAttentions().then(res=>{
-        console.log(res)
-        if(res.data.code == '0010') {
-          this.studentlist = res.data.data
-          localStorage.setItem('student',JSON.stringify(res.data.data))
-        }
-      })
-    },
     confirm(){
       updateAttention(this.id).then(res=>{
         console.log(res)

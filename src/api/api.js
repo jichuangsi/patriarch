@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Vue from 'vue'
-let api = 'http://192.168.31.154:7979'
+// let api = 'http://192.168.31.154:7979'
+let api = 'http://api.jichuangsi.com/PARENTSERVICE'
 
 
 
@@ -115,6 +116,36 @@ export function updateAttention(studentId) {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+
+// 获取校园通知
+export function parentGetNewNotices() {
+    return axios({
+        method: 'GET',
+        url: api+`/parent/parentGetNewNotices`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+//校园通知详情
+export function getNoticeByNoticeId(noticeId) {
+    return axios({
+        method: 'GET',
+        url: api+`/parent/getNoticeByNoticeId/${noticeId}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//家长发送留言
+export function leaveParentMessageBoard(content) {
+    return axios({
+        method: 'GET',
+        url: api+`/parent/leaveParentMessageBoard`,
+        data:{
+            content
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
 // 新闻列表
 export function data(status,pageindex,pagesize) {
     return axios({
@@ -131,7 +162,14 @@ export function details(infoid) {
         // headers: {'accessToken': localStorage.getItem('token')}
     });
 }
-
+// 新闻查询
+export function query(title,pageindex,pagesize) {
+    return axios({
+        method: 'post',
+        url: 'http://192.168.31.123/parentjournalism/getlookup.php?title='+title+'&pageindex='+pageindex+'&pagesize='+pagesize,
+        // headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
 
 
 let ajax = axios.create({

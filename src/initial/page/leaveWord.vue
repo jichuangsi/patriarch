@@ -31,6 +31,7 @@
 </template>
 <script>
 import top from "@/components/top";
+import {leaveParentMessageBoard} from '@/api/api'
 export default {
   name: "announcement",
   components: {
@@ -41,7 +42,8 @@ export default {
       msg: "家校通",
       back: true,
       teacher:'',
-      messagelist:[]
+      messagelist:[],
+      messagetext:''
     };
   },
   mounted() {
@@ -50,7 +52,10 @@ export default {
   },
   methods:{
     btn(){
-
+      console.log(this.messagetext)
+      leaveParentMessageBoard(this.messagetext).then(res=>{
+        console.log(res)
+      })
     }
   }
 };
