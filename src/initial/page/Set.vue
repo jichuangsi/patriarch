@@ -4,12 +4,14 @@
     <h3>门户账号</h3>
     <div class="userbox clearfix">
       <div class="fl">未有门户账户</div>
-      <div class="fr" @click="Gatewayshow = true">绑定账户</div>
+      <div class="fr" v-if="!Gateway" @click="Gatewayshow = true">绑定账户</div>
+      <div class="fr" v-if="Gateway" @click="Gatewayshow = true">更换密码</div>
     </div>
     <h3>绑定手机号</h3>
     <div class="userbox clearfix">
       <div class="fl">未绑定手机号</div>
-      <div class="fr">绑定手机号</div>
+      <div class="fr" v-if="!Telephone" @click="phoneshow = true">绑定手机号</div>
+      <div class="fr" v-if="Telephone" @click="phoneshow = true">更换</div>
     </div>
     <h3>关联管理</h3>
     <div class="data_box" v-for="(item,index) in studentlist" :key="index">
@@ -18,7 +20,7 @@
         <div class="name">关联学生：{{item.studentName}}</div>
         <div class="school">在读学校：{{item.schoolName}}</div>
         <div class="class">所在班级：{{item.className}}</div>
-        <div class="follow">取消关联</div>
+        <div class="follow" @click="delshow = true,id=item.studentId">取消关联</div>
       </div>
     </div>
     <div class="addbtn" @click="setshow = true">添加关联</div>
@@ -39,7 +41,9 @@
         <div class="none" @click="Gatewayshow = false">x</div>
         <h3>新建门户账户</h3>
           <div>
-            <span>新建门户账户：</span><input type="text" v-model="GatewayAccount">
+            <span>新建门户账户：</span>
+            <input v-if="!Gateway" type="text" v-model="GatewayAccount">
+            <!-- <input v-if="Gateway" type="text" v-model="GatewayAccount" disabled> -->
           </div>
           <div>
             <span>设置密码：</span><input type="Password" v-model="Gatewaypsw">
@@ -51,12 +55,36 @@
           <div class="confirm" @click="Gatewayconfirm">确认</div>
       </div>
     </div>
+    <div class="delbox" v-if="delshow">
+      <div class="del_box">
+        <div class="none" @click="delshow = false">x</div>
+        <h3>提示</h3>
+        <h4>是否取消该学生关联</h4>
+          <div>
+            <!-- <input type="text" placeholder="请输入绑定学生账户" v-model="studentAccount"> -->
+          </div>
+          <div class="empty" @click="delshow = false">取消</div>
+          <div class="confirm" @click="delconfirm">确认</div>
+      </div>
+    </div>
+    <div class="phonebox" v-if="phoneshow">
+      <div class="phone_box">
+        <div class="none" @click="phoneshow = false">x</div>
+        <h3>绑定手机</h3>
+        <h4>请输入绑定手机号</h4>
+          <div>
+            <input type="text" placeholder="请输入绑定手机号" v-model="phone">
+          </div>
+          <div class="empty" @click="phone=''">清空</div>
+          <div class="confirm" @click="phoneconfirm">确认</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import top from '@/components/top'
-import {parentBindStudent,getAttentions} from '@/api/api'
+import {parentBindStudent,getAttentions,deleteBindStudent,getParentBindInfo} from '@/api/api'
 import { Toast } from 'mint-ui'
 export default {
   name: 'set',
@@ -68,12 +96,18 @@ export default {
       msg:'设置',
       back:true,
       setshow:false,            //关联弹窗
+      Gateway:false,
+      Telephone:false,
       studentAccount:'',      //关联学生账户
       studentlist:[],        //关联学生列表
       Gatewayshow:false,    //门户弹窗
       GatewayAccount:'',
       Gatewaypsw:'',
-      Gatewaypsw_:''
+      Gatewaypsw_:'',
+      delshow:false,
+      phoneshow:false,
+      phone:'',
+      id:''
     }
   },
   mounted() {
@@ -96,8 +130,17 @@ export default {
     },
     getdata() {
       getAttentions().then(res=>{
+        console.log(res)
         if(res.data.code == '0010'){
           this.studentlist = res.data.data
+          localStorage.setItem('student',JSON.stringify(res.data.data))
+        }
+      })
+      getParentBindInfo().then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          this.Gateway = res.data.data.account
+          this.Telephone = res.data.data.phone
         }
       })
     },
@@ -105,6 +148,18 @@ export default {
       console.log(this.GatewayAccount)
       console.log(this.Gatewaypsw)
       console.log(this.Gatewaypsw_)
+    },
+    delconfirm(){
+      deleteBindStudent(this.id).then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          this.getdata()
+          this.delshow = false
+        }
+      })
+    },
+    phoneconfirm(){
+
     }
   }
 }
@@ -263,7 +318,7 @@ export default {
         margin: -10px;
         float: right;
         padding: 5px 20px;
-        font-size: 28px;
+        font-size: 36px;
       }
       .empty {
         margin: 0px;
@@ -338,14 +393,17 @@ export default {
         }
         input {
           margin-left: 10px;
-          width: 60%;
+          width: 50%;
           border: 2px solid #3d72fe;
           height: 34px;
           line-height: 34px;
           text-indent: 20px;
           background-color: #ecf1ff;
           border-radius: 5px;
-          text-align: center;
+          text-align: center; 
+        }
+        input:first-child{
+          margin-left: 0px;
         }
       }
       .last {
@@ -355,7 +413,179 @@ export default {
         margin: -10px;
         float: right;
         padding: 5px 20px;
-        font-size: 28px;
+        font-size: 36px;
+      }
+      .empty {
+        margin: 0px;
+        display: inline-block;
+        color: #fff; 
+        padding: 10px 30px;
+        border-radius: 10px;
+        background-color: #3d72fe;
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-125%);
+      }
+      .confirm {
+        margin: 0px;
+        display: inline-block;
+        color: #fff; 
+        padding: 10px 30px;
+        border-radius: 10px;
+        background-color: #3d72fe;
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(25%);
+      }
+    }
+  }
+  .delbox {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    .del_box {
+      width: 80%;
+      border-radius: 20px;
+      padding: 20px;
+      padding-bottom: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background-color: #fff;
+      transform: translate(-50%,-50%);
+      overflow: hidden;
+        h3 {
+          text-align: center;
+          margin-top: 40px;
+          margin-bottom: 15px;
+          font-size: 34px;
+          line-height: 38px;
+          font-weight: 700;
+          letter-spacing:5px;
+          color: #000;
+        }
+        h4 {
+          text-align: center;
+          font-size: 18px;
+          line-height: 26px;
+        }
+      div {
+        margin: 30px auto;
+        margin-bottom: 90px;
+        span {
+          font-size: 28px;
+        }
+        input {
+          width: 60%;
+          display: block;
+          border: 2px solid #3d72fe;
+          height: 34px;
+          line-height: 34px;
+          text-indent: 20px;
+          margin: 0 auto;
+          background-color: #ecf1ff;
+          border-radius: 5px;
+          text-align: center;
+        }
+      }
+      .none {
+        margin: -10px;
+        float: right;
+        padding: 5px 20px;
+        font-size: 36px;
+      }
+      .empty {
+        margin: 0px;
+        display: inline-block;
+        color: #fff; 
+        padding: 10px 30px;
+        border-radius: 10px;
+        background-color: #3d72fe;
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-125%);
+      }
+      .confirm {
+        margin: 0px;
+        display: inline-block;
+        color: #fff; 
+        padding: 10px 30px;
+        border-radius: 10px;
+        background-color: #3d72fe;
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(25%);
+      }
+    }
+  }
+  .phonebox {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    .phone_box {
+      width: 80%;
+      border-radius: 20px;
+      padding: 20px;
+      padding-bottom: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background-color: #fff;
+      transform: translate(-50%,-50%);
+      overflow: hidden;
+        h3 {
+          text-align: center;
+          margin-top: 40px;
+          margin-bottom: 15px;
+          font-size: 34px;
+          line-height: 38px;
+          font-weight: 700;
+          letter-spacing:5px;
+          color: #000;
+        }
+        h4 {
+          text-align: center;
+          font-size: 18px;
+          line-height: 26px;
+        }
+      div {
+        margin: 30px auto;
+        margin-bottom: 90px;
+        span {
+          font-size: 28px;
+        }
+        input {
+          width: 60%;
+          display: block;
+          border: 2px solid #3d72fe;
+          height: 34px;
+          line-height: 34px;
+          text-indent: 20px;
+          margin: 0 auto;
+          background-color: #ecf1ff;
+          border-radius: 5px;
+          text-align: center;
+        }
+      }
+      .none {
+        margin: -10px;
+        float: right;
+        padding: 5px 20px;
+        font-size: 36px;
       }
       .empty {
         margin: 0px;

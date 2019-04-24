@@ -1,7 +1,7 @@
 <template>
   <div class="education">
     <top :msg ="msg" :back="back"></top>
-    <div class="search iconfont icon-sousuo"></div>
+    <router-link to="search"><div class="search iconfont icon-sousuo"></div></router-link>
         <div class="swipe">
         <mt-swipe :auto="4000">
         <mt-swipe-item><div class="swipe-img1"><img src="../assets/img/nav1.jpg" alt=""></div></mt-swipe-item>
@@ -94,11 +94,12 @@ export default {
   margin-bottom: 118px;
   position: relative;
   .search {
-      position: absolute;
+      position: fixed;
       top: 23px;
       right: 50px;
       font-size: 44px;
       color: #fff;
+      z-index: 100;
   }  
     .swipe {
         height: 240px;

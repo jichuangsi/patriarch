@@ -10,7 +10,7 @@ export function getWxToken(code) {
     return axios({
         method: 'GET',
         url: api+`/parent/getWxToken/${code}`,
-        // headers: {'accessToken': localStorage.getItem('token')}
+        headers: {'accessToken': '123456789'}
     });
 }
 
@@ -20,7 +20,7 @@ export function getParentInfo(access_token,openid,code) {
     return axios({
         method: 'GET',
         url: api+`/parent/getParentInfo/${access_token}/${openid}/${code}`,
-        // headers: {'accessToken': localStorage.getItem('token')}
+        headers: {'accessToken': '123456789'}
     });
 }
 
@@ -31,8 +31,17 @@ export function loginParentService(userName,openId,phone) {
         url: api+`/parent/loginParentService`,
         data:{
             userName,openId,phone
-        }
-        // headers: {'accessToken': localStorage.getItem('token')}
+        },
+        headers: {'accessToken': '123456789'}
+    });
+}
+
+//查看家长是否绑定学生
+export function getParentBindInfo() {
+    return axios({
+        method: 'GET',
+        url: api+`/parent/getParentBindInfo`,
+        headers: {'accessToken': localStorage.getItem('token')}
     });
 }
 
@@ -50,6 +59,15 @@ export function parentBindStudent(studentAccount) {
     return axios({
         method: 'GET',
         url: api+`/parent/parentBindStudent/${studentAccount}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+// 家长绑定学生
+export function deleteBindStudent(studentId) {
+    return axios({
+        method: 'DELETE',
+        url: api+`/parent/deleteBindStudent/${studentId}`,
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }

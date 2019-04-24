@@ -15,14 +15,14 @@
       </div>
     </div>
     <div class="nav">
-      <div style="backgroundColor:#47a4cd;"><i class="iconfont icon-shoucang"></i><span>我的收藏</span></div>
-      <div style="backgroundColor:#f17849;"><i class="iconfont icon-pinglun"></i><span>我的评论</span></div>
-      <div style="backgroundColor:#66d3c0;"><i class="iconfont icon-dianzan"></i><span>我的点赞</span></div>
-      <div style="backgroundColor:#66d3c0;"><i class="iconfont icon-lishi"></i><span>浏览历史</span></div>
-      <router-link to="set"><div style="backgroundColor:#f15f5f;"><i class="iconfont icon-shezhi"></i><span>我的设置</span></div></router-link>
-      <router-link to="Growth"><div style="backgroundColor:#509ef3;"><i class="iconfont icon-chengchang"></i><span>成长记录</span></div></router-link>
-      <div style="backgroundColor:#fcc837;"><i class="iconfont icon-huiyuandefuben"></i><span>购买会员</span></div>
-      <router-link to="Contact_us"><div style="backgroundColor:#454fd2;"><i class="iconfont icon-lianxiwomen"></i><span>联系我们</span></div></router-link>
+      <div class="div1"></div>
+      <div class="div2"></div>
+      <div class="div3"></div>
+      <div class="div4"></div>
+      <router-link to="set"><div class="div5"></div></router-link>
+      <router-link to="Growth"><div class="div6"></div></router-link>
+      <div class="div7"></div>
+      <router-link to="Contact_us"><div class="div8"></div></router-link>
     </div>
     <!-- <div class="setbox" v-if="setshow">
       <div class="set_box">
@@ -81,7 +81,6 @@ export default {
         if(res.data.code == '0010'){
           this.setshow = false
           Toast('更换成功')
-          this.getdata()
         }
       })
     }
@@ -147,28 +146,79 @@ export default {
     flex-wrap: wrap;
     justify-content: space-between;
     div {
-      width: 160px;
-      height: 160px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      // margin-left: 22px;
-      margin-bottom: 50px;
-      box-shadow: inset 0px 0px 16px rgba(102, 102, 102, 0.5), 0px 0px 8px rgba(0, 0, 0, 0.5);
-      i {
-        color: #fff;
-        font-size: 80px;
-      }
-      span {
-        font-size: 28px;
-        font-weight: 700;
-        color: #fff;
-      }
+      margin: 0px;
+      width: 174px;
+      height: 174px;
+      // margin-bottom: 50px;
     }
     div:active {
-      box-shadow: inset 0px 0px 32px rgba(0, 0, 0, 1);
+      width: 160px;
+      height: 160px;
+      margin: 7px;
+    }
+    .div1{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -2817px;
+      background-size: 1920px 8000px;
+    }
+    .div1:active{
+      background-position: -1069px -2817px;
+    }
+    .div2{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -4540px;
+      background-size: 1920px 8000px;
+    }
+    .div2:active{
+      background-position: -1069px -4540px;
+    }
+    .div3{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -4109px;
+      background-size: 1920px 8000px;
+    }
+    .div3:active{
+      background-position: -1069px -4109px;
+    }
+    .div4{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -3678px;
+      background-size: 1920px 8000px;
+    }
+    .div4:active{
+      background-position: -1069px -3678px;
+    }
+    .div5{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -4970px;
+      background-size: 1920px 8000px;
+    }
+    .div5:active{
+      background-position: -1069px -4970px;
+    }
+    .div6{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -5401px;
+      background-size: 1920px 8000px;
+    }
+    .div6:active{
+      background-position: -1069px -5401px;
+    }
+    .div7{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -5832px;
+      background-size: 1920px 8000px;
+    }
+    .div7:active{
+      background-position: -1069px -5832px;
+    }
+    .div8{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -3248px;  
+      background-size: 1920px 8000px;
+    }
+    .div8:active{
+      background-position: -1069px -3248px;
     }
   }
   

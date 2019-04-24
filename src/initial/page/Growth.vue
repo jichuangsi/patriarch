@@ -32,16 +32,18 @@
     <div class="addbox" v-if="addshow">
         <div class="add_box">
         <div class="none" @click="addshow = false">x</div>
+            <div class="imgtext">添加图片：</div>
             <div class="imgbox">
                 <img :src="newimg" alt="" v-if="imgshow">
                 <div v-if="!imgshow">
-                    <input type="file" name="fileUpload" id="fileUp" @change="change($event)" ref="inputFile" >
+                    <input type="file" name="fileUpload" id="fileUp" @change="fileChange($event)" ref="inputFile" >
                     <div>+</div>
                     <span>添加图片</span>
                 </div>
-                <div class="ipt">
-                    <span>成长记录:</span><input type="text" v-model="title">
-                </div>
+            </div>
+            <div class="ipt">
+                <span>成长记录:</span>
+                <textarea name="ipttext" id="ipttext" cols="30" rows="10" v-model="title"></textarea>
             </div>
           <div class="empty" @click="title=''">清空</div>
           <div class="confirm" @click="confirm">确认</div>
@@ -356,9 +358,9 @@ export default {
       left: 0px;
       background-color: rgba(0, 0, 0, 0.3);
       .add_box {
-          width: 400px;
-          height: 420px;
-          padding: 50px 100px 170px 100px;
+          width: 680px;
+          height: 620px;
+          padding: 19px 62px 37px 62px;
           position: absolute;
           left: 50%;
           top: 50%;
@@ -367,20 +369,25 @@ export default {
             .none {
                 margin: -10px;
                 padding: 5px 20px;
-                font-size: 28px;
+                font-size: 36px;
                 position: absolute;
                 top: 5px;
                 right: 10px;
             }
+            .imgtext {
+                font-size: 24px;
+                margin-bottom: 19px;
+            }
           .imgbox {
             display: inline-block;
             width: 100%;
-            height: 100%;
+            height: 298px;
             text-align: center;
-            color: #939393;
-            background-color: #e5e5e5;
+            color: #cfb3b3;
+            background-color: #f2f2f2;
             vertical-align: top;
             position: relative;
+            border: 4px solid #69d4c4;
             img {
                 width: 100%;
                 height: 100%;
@@ -395,31 +402,29 @@ export default {
             }
             div {
                 font-size: 120px;
+                margin-top: 50px;
             }
             span {
                 display: block;
                 font-size: 30px;
             }
-            .ipt {
-                font-size: 28px;
-                position: absolute;
-                bottom: -60px;
-                left: -60px;
-                span {
-
-                }
-                input {
-                    width: 180px;
-                    opacity: 1;
-                    font-size: 28px;
-                    height: 32px;
-                    line-height: 32px;
-                    border: 1px solid #999;
-                    margin-left: 140px;
-                    text-indent: 10px;
-                }
-            }
           }
+        .ipt {
+            span {
+                display: block;
+                margin-top: 20px;
+                font-size: 24px;
+                line-height: 34px;
+                margin-bottom: 10px;
+            }
+            #ipttext {
+                outline: none;
+                width: 100%;
+                height: 80px;
+                border: 4px solid #69d4c4;
+                background-color: #f2f2f2;
+            }
+        }
         .empty {
             margin: 0px;
             display: inline-block;

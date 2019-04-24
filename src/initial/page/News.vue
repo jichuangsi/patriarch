@@ -45,10 +45,7 @@ export default {
       getdata(){
           details(this.id).then(res=>{  
               console.log(res)
-              this.news = res.data
-          })
-          query('9',0,100).then(res=>{
-              console.log(res)
+              this.news = res.data[0]
           })
       },
       btn(){

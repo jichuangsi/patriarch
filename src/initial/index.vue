@@ -14,8 +14,8 @@
           </div>
         </div>
       </div>
-      <button @click="btn">获取OPENID</button>
-      <button @click="btn2">获取个人信息</button>
+      <!-- <button @click="btn">获取OPENID</button>
+      <button @click="btn2">获取个人信息</button> -->
     </div>
     <div class="setbox" v-if="setshow">
       <div class="set_box">
@@ -28,6 +28,14 @@
           <div class="empty" @click="studentAccount=''">清空</div>
           <div class="confirm" @click="confirm">确认</div>
       </div>
+    </div>
+    <!-- <button @click="btn1">czcz</button> -->
+    <div class="login" v-if="loginshow">
+        <div class="text">集创思  申请使用</div>
+        <div class="text1">以下信息</div>
+        <div class="text2"><span>✔</span>你的账号信息（昵称、头像、地区与性别）</div>
+        <div class="login_confirm" @click="login">确认</div>
+        <div class="login_cancel" @click="cancel">取消</div>
     </div>
     <foot :current="current"></foot>
   </div>
@@ -51,28 +59,48 @@ export default {
       setshow: false,
       studentAccount:'',
       student:'',
-      teacherlist:[]
+      teacherlist:[],
+      loginshow:false
     }
   },
   mounted(){
-    this.getdata()
+    this.btn()
   },
   methods:{
     jump(item){
       this.$store.commit('TEACHER',item)
       this.$router.push({
         path:'/leaveWord'
+        
       })
     },
+    // btn1(){
+    // let Appid = 'wx6242cfcc7e43e927'
+    //   window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+Appid+'&redirect_uri=http://127.0.0.1&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
+    // },
     btn(){  //第二次跳转获取code
-      let Appid = 'wx124c0ab234287c8c'
+    let Appid = 'wx124c0ab234287c8c'
+    let user = localStorage.getItem('user')?localStorage.getItem('user'):''
+    if(user){
+      this.loginshow = false
+      let token = localStorage.getItem('token')?localStorage.getItem('token'):''
+      if(token){
+        this.getdata()
+      }else {
+        this.btn2()
+      }
+    }else{
+      this.loginshow = true
+    }
+    },
+    login(){
       let code = window.location.href
       code = code.split('?')[1].split('&')[0].split('=')[1]
       getWxToken(code).then(res=>{
         console.log(res)
         if(res.data.code == '0010') {
           localStorage.setItem('user',res.data.data.access_token+'&'+res.data.data.openid)
-          window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+Appid+'&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
+          window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
         }
       })
     },
@@ -126,6 +154,9 @@ export default {
           this.setshow = false
         }
       })
+    },
+    cancel(){
+      WeixinJSBridge.call('closeWindow')
     }
   }
 }
@@ -281,6 +312,65 @@ export default {
         left: 50%;
         transform: translateX(25%);
       }
+    }
+  }
+  .login {
+    width: 100%;
+    height: 100%;
+    padding: 195px 59px;
+    letter-spacing: 2px;
+    color: #333;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background-color: #fff;
+    z-index: 111;
+    .text {
+      font-size: 24px;
+      line-height: 28px;
+    }
+    .text1 {
+      font-size: 46px;
+      line-height: 50px;
+      margin-top: 50px;
+    }
+    .text2 {
+      margin-top: 70px;
+      font-size: 24px;
+      line-height: 28px;
+      span {
+        padding: 0px 4px;
+        border-radius: 50%;
+        border: 1px solid #999;
+        margin-right: 20px;
+      }
+    }
+    .login_confirm{
+      width: 352px;
+      height: 77px;
+      text-align: center;
+      line-height: 77px;
+      color: #fff;
+      border-radius: 10px;
+      background-color: #07c160;
+      position: absolute;
+      left: 50%;
+      bottom: 350px;
+      transform: translateX(-50%);
+      margin-bottom: 24px;
+    }
+    .login_cancel {
+      width: 352px;
+      height: 77px;
+      color: #07c160;
+      text-align: center;
+      border-radius: 10px;
+      background-color: #f2f2f2;
+      line-height: 77px;
+      position: absolute;
+      left: 50%;
+      bottom: 250px;
+      transform: translateX(-50%);
     }
   }
 }

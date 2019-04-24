@@ -12,10 +12,9 @@
             </div>
             <div class="right">
                 <div class="title">
-                    <span v-if="item.noticeType=='S'">系统通知：</span>
+                    <span v-if="item.noticeType=='S'">系统通知：{{item.content}}</span>
                     <span v-if="item.noticeType=='X'">老师消息：</span>
-                    <span v-if="item.noticeType=='C'">校园通知：</span>
-                    {{item.content}}
+                    <span v-if="item.noticeType=='C'">校园通知：{{item.title}}</span>
                 </div>
                 <div class="text">{{item.createdTime}}</div>
                 <div class="details">查看详情</div>

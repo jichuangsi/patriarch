@@ -2,12 +2,12 @@
   <div class="overview">
     <top :msg="msg" :back="back"></top>
     <div class="nav">
-      <router-link to="Situation"><div style="backgroundColor:#2a8cf7;"><i class="iconfont icon-xuexiaoqingkuang"></i><span>在校情况</span></div></router-link>
-      <router-link to="Schedule"><div style="backgroundColor:#ef7b42;"><i class="iconfont icon-kechengbiao"></i><span>课程表</span></div></router-link>
-      <router-link to="homework"><div style="backgroundColor:#4da2c7;"><i class="iconfont icon-zuoye"></i><span>当天作业</span></div></router-link>
-      <router-link to="Commendation"><div style="backgroundColor:#63d4c0;"><i class="iconfont icon-jiajiang"></i><span>获得嘉奖</span></div></router-link>
-      <router-link to="Report"><div style="backgroundColor:#d15fbf;"><i class="iconfont icon-baobiao"></i><span>学情报表</span></div></router-link>
-      <router-link to="library"><div style="backgroundColor:#4c48e5;"><i class="iconfont icon-tushuguan"></i><span>家长图书馆</span></div></router-link>
+      <router-link to="Situation"><div class="div1"></div></router-link>
+      <router-link to="Schedule"><div class="div2"></div></router-link>
+      <router-link to="homework"><div class="div3"></div></router-link>
+      <router-link to="Commendation"><div class="div4"></div></router-link>
+      <router-link to="Report"><div class="div5"></div></router-link>
+      <router-link to="library"><div class="div6"></div></router-link>
     </div>
     <foot :current="current"></foot>
   </div>
@@ -39,34 +39,69 @@ export default {
   .nav {
     width: 100%;
     margin-top: 40px;
-    margin-bottom: 100px;
+    margin-bottom: 128px;
     padding: 0px 45px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     div {
-      width: 300px;
-      height: 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      // margin-right: 50px;
-      margin-bottom: 30px;
-      box-shadow: inset 0px 0px 32px rgba(102, 102, 102, 1), 0px 0px 16px rgba(0, 0, 0, 0.5);
-      i {
-        color: #fff;
-        font-size: 160px;
-      }
-      span {
-        font-size: 34px;
-        font-weight: 700;
-        color: #fff;
-      }
+      margin: 0px;
+      width: 314px;
+      height: 314px;
+      // margin-bottom: 50px;
     }
     div:active {
-      box-shadow: inset 0px 0px 32px rgba(0, 0, 0, 1),0px 0px 256px rgba(255,0,0,1);
+      width: 300px;
+      height: 300px;
+      margin: 7px;
+    }
+    .div1{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -163px;
+      background-size: 1920px 8000px;
+    }
+    .div1:active{
+      background-position: -1069px -163px;
+    }
+    .div2{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -594px;
+      background-size: 1920px 8000px;
+    }
+    .div2:active{
+      background-position: -1069px -594px;
+    }
+    .div3{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -2317px;
+      background-size: 1920px 8000px;
+    }
+    .div3:active{
+      background-position: -1069px -2317px;
+    }
+    .div4{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -1886px;
+      background-size: 1920px 8000px;
+    }
+    .div4:active{
+      background-position: -1069px -1886px;
+    }
+    .div5{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -1455px;
+      background-size: 1920px 8000px;
+    }
+    .div5:active{
+      background-position: -1069px -1455px;
+    }
+    .div6{
+      background: url('../assets/img/按钮.png') no-repeat;
+      background-position: -277px -1025px;
+      background-size: 1920px 8000px;
+    }
+    .div6:active{
+      background-position: -1069px -1025px;
     }
   }
 }

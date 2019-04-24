@@ -21,6 +21,7 @@ import set from '@/initial/page/set'
 import Report from '@/initial/page/Report'
 import Schedule from '@/initial/page/Schedule'
 import News from '@/initial/page/News'
+import search from '@/initial/page/search'
 Vue.use(Router)
 
 export default new Router({
@@ -119,6 +120,10 @@ export default new Router({
       path: '/News',
       name: 'News',
       component: News
+    },{
+      path: '/search',
+      name: 'search',
+      component: search
     }
   ]
 })
