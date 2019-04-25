@@ -16,6 +16,8 @@
       </div>
       <!-- <button @click="btn">获取OPENID</button>
       <button @click="btn2">获取个人信息</button> -->
+      <button @click="btn3">获取token</button>
+      <button @click="btn4">获取</button>
     </div>
     <div class="setbox" v-if="setshow">
       <div class="set_box">
@@ -45,7 +47,7 @@
 import top from '@/components/top'
 import foot from '@/components/foot'
 import { Toast } from 'mint-ui'
-import {getWxToken,getParentInfo,loginParentService,getBindStudentInfo,parentBindStudent,getStudentTeachers,getAttentions} from '@/api/api'
+import {tokenwx,getWxToken,getParentInfo,loginParentService,getBindStudentInfo,parentBindStudent,getStudentTeachers,getAttentions} from '@/api/api'
 export default {
   name: 'index',
   components: {
@@ -76,7 +78,7 @@ export default {
     },
     // btn1(){
     // let Appid = 'wx6242cfcc7e43e927'
-    //   window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+Appid+'&redirect_uri=http://127.0.0.1&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
+    //   window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
     // },
     btn(){  //第二次跳转获取code
     let Appid = 'wx124c0ab234287c8c'
@@ -90,7 +92,8 @@ export default {
         this.btn2()
       }
     }else{
-      this.loginshow = true
+      // this.loginshow = true
+      this.login()
     }
     },
     login(){
@@ -145,6 +148,14 @@ export default {
           this.teacherlist = res.data.data
         }
       })
+    },
+    btn3(){
+      tokenwx().then(res=>{
+        console.log(res)
+      })
+    },
+    btn4(){
+      window.location = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx124c0ab234287c8c&secret=833fcfda44d153686bbdd0a10450bf08'
     },
     confirm() {
       parentBindStudent(this.studentAccount).then(res=>{

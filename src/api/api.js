@@ -4,13 +4,17 @@ import Vue from 'vue'
 let api = 'http://api.jichuangsi.com/PARENTSERVICE'
 
 
-
+export function tokenwx(){
+    return axios({
+        method:'get',
+        url:'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx124c0ab234287c8c&secret=833fcfda44d153686bbdd0a10450bf08'
+    })
+}
 // 获取token，openid
 export function getWxToken(code) {
     return axios({
         method: 'GET',
-        url: api+`/parent/getWxToken/${code}`,
-        headers: {'accessToken': '123456789'}
+        url: api+`/parent/getWxToken/${code}`
     });
 }
 
@@ -19,28 +23,49 @@ export function getWxToken(code) {
 export function getParentInfo(access_token,openid,code) {
     return axios({
         method: 'GET',
-        url: api+`/parent/getParentInfo/${access_token}/${openid}/${code}`,
-        headers: {'accessToken': '123456789'}
+        url: api+`/parent/getParentInfo/${access_token}/${openid}/${code}`
     });
 }
 
-// 获取用户信息
+// 获取token
 export function loginParentService(userName,openId,phone) {
     return axios({
         method: 'POST',
         url: api+`/parent/loginParentService`,
         data:{
             userName,openId,phone
-        },
-        headers: {'accessToken': '123456789'}
+        }
     });
 }
 
-//查看家长是否绑定学生
+//查看家长绑定信息
 export function getParentBindInfo() {
     return axios({
         method: 'GET',
         url: api+`/parent/getParentBindInfo`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+//家长绑定门户账号密码
+export function setParentAccount(account,pwd) {
+    return axios({
+        method: 'POST',
+        url: api+`/parent/setParentAccount`,
+        data:{
+            account,pwd
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//家长门户账号修改密码
+export function setParentNewPwd(pwd) {
+    return axios({
+        method: 'POST',
+        url: api+`/parent/setParentNewPwd`,
+        data:{
+            pwd
+        },
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
@@ -152,10 +177,10 @@ export function getNoticeByNoticeId(noticeId) {
     });
 }
 
-//家长发送留言
+//家长留言板
 export function leaveParentMessageBoard(content) {
     return axios({
-        method: 'GET',
+        method: 'POST',
         url: api+`/parent/leaveParentMessageBoard`,
         data:{
             content

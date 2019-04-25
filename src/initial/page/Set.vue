@@ -3,13 +3,15 @@
     <top :msg ="msg" :back="back"></top>
     <h3>门户账号</h3>
     <div class="userbox clearfix">
-      <div class="fl">未有门户账户</div>
-      <div class="fr" v-if="!Gateway" @click="Gatewayshow = true">绑定账户</div>
-      <div class="fr" v-if="Gateway" @click="Gatewayshow = true">更换密码</div>
+      <div class="fl" v-if="!Gateway">未有门户账户</div>
+      <div class="fl" v-if="Gateway">门户账户</div>
+      <div class="fr" v-if="!Gateway" @click="Gatewayshow = true,GatewayAccount='',Gatewaypsw='',Gatewaypsw_=''">绑定账户</div>
+      <div class="fr" v-if="Gateway" @click="Gatewayshow = true,Gatewaypsw='',Gatewaypsw_=''">更换密码</div>
     </div>
     <h3>绑定手机号</h3>
     <div class="userbox clearfix">
-      <div class="fl">未绑定手机号</div>
+      <div class="fl" v-if="!Telephone">未绑定手机号</div>
+      <div class="fl" v-if="Telephone">手机号</div>
       <div class="fr" v-if="!Telephone" @click="phoneshow = true">绑定手机号</div>
       <div class="fr" v-if="Telephone" @click="phoneshow = true">更换</div>
     </div>
@@ -39,14 +41,14 @@
     <div class="Gateway" v-if="Gatewayshow">
       <div class="Gateway_box">
         <div class="none" @click="Gatewayshow = false">x</div>
-        <h3>新建门户账户</h3>
-          <div>
+        <h3 v-if="!Gateway">新建门户账户</h3>
+        <h3 v-if="Gateway">更换密码</h3>
+          <div v-if="!Gateway">
             <span>新建门户账户：</span>
-            <input v-if="!Gateway" type="text" v-model="GatewayAccount">
-            <!-- <input v-if="Gateway" type="text" v-model="GatewayAccount" disabled> -->
+            <input type="text" v-model="GatewayAccount" placeholder="以字母开头">
           </div>
           <div>
-            <span>设置密码：</span><input type="Password" v-model="Gatewaypsw">
+            <span>设置密码：</span><input type="Password" v-model="Gatewaypsw" placeholder="字母数字混合6-12位密码">
           </div>
           <div class="last">
             <span>确认密码：</span><input type="Password" v-model="Gatewaypsw_">
@@ -84,7 +86,7 @@
 
 <script>
 import top from '@/components/top'
-import {parentBindStudent,getAttentions,deleteBindStudent,getParentBindInfo} from '@/api/api'
+import {parentBindStudent,getAttentions,deleteBindStudent,getParentBindInfo,setParentAccount,setParentNewPwd} from '@/api/api'
 import { Toast } from 'mint-ui'
 export default {
   name: 'set',
@@ -148,6 +150,36 @@ export default {
       console.log(this.GatewayAccount)
       console.log(this.Gatewaypsw)
       console.log(this.Gatewaypsw_)
+      if(this.Gateway){
+        if(this.Gatewaypsw == this.Gatewaypsw_){
+            setParentNewPwd(this.Gatewaypsw).then(res=>{
+              console.log(res)
+              if(res.data.code == '0010'){
+                  Toast('成功')
+                  this.getdata()
+                  this.Gatewayshow = false
+              }else{
+                  Toast('错误')
+              }
+            })
+          }else {
+          Toast('两次密码不一致')
+        }
+      }else{
+        if(this.Gatewaypsw == this.Gatewaypsw_){
+          setParentAccount(this.GatewayAccount,this.Gatewaypsw).then(res=>{
+            if(res.data.code == '0010'){
+                Toast('成功')
+                this.getdata()
+                this.Gatewayshow = false
+            }else{
+                Toast('错误')
+            }
+          })
+        }else {
+          Toast('两次密码不一致')
+        }
+      }
     },
     delconfirm(){
       deleteBindStudent(this.id).then(res=>{
@@ -400,7 +432,7 @@ export default {
           text-indent: 20px;
           background-color: #ecf1ff;
           border-radius: 5px;
-          text-align: center; 
+          text-align: left; 
         }
         input:first-child{
           margin-left: 0px;
