@@ -3,13 +3,6 @@ import Vue from 'vue'
 // let api = 'http://192.168.31.154:7979'
 let api = 'http://api.jichuangsi.com/PARENTSERVICE'
 
-
-export function tokenwx(){
-    return axios({
-        method:'get',
-        url:'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx124c0ab234287c8c&secret=833fcfda44d153686bbdd0a10450bf08'
-    })
-}
 // 获取token，openid
 export function getWxToken(code) {
     return axios({
@@ -20,20 +13,20 @@ export function getWxToken(code) {
 
 
 // 获取用户信息
-export function getParentInfo(access_token,openid,code) {
+export function getParentInfo(access_token,openid) {
     return axios({
         method: 'GET',
-        url: api+`/parent/getParentInfo/${access_token}/${openid}/${code}`
+        url: api+`/parent/getParentInfo/${access_token}/${openid}`
     });
 }
 
 // 获取token
-export function loginParentService(userName,openId,phone) {
+export function loginParentService(userName,openId,headimgurl) {
     return axios({
         method: 'POST',
         url: api+`/parent/loginParentService`,
         data:{
-            userName,openId,phone
+            userName,openId,headimgurl
         }
     });
 }
@@ -65,6 +58,18 @@ export function setParentNewPwd(pwd) {
         url: api+`/parent/setParentNewPwd`,
         data:{
             pwd
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//家长绑定手机号
+export function bindParentPhone(phone) {
+    return axios({
+        method: 'POST',
+        url: api+`/parent/bindParentPhone`,
+        data:{
+            phone
         },
         headers: {'accessToken': localStorage.getItem('token')}
     });
@@ -151,6 +156,28 @@ export function getStudentHomeWork(studentId) {
     });
 }
 
+// 查看学生的各科课堂成绩
+export function getStudentCourseScore(studentId,statisticsTimes,subjectName) {
+    return axios({
+        method: 'POST',
+        url: api+`/studentInfo/getStudentCourseScore`,
+        data:{
+            studentId,statisticsTimes,subjectName
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+// 查看学生的各科课后作业成绩
+export function getStudentHomeworkScore(studentId,statisticsTimes,subjectName) {
+    return axios({
+        method: 'POST',
+        url: api+`/studentInfo/getStudentHomeworkScore`,
+        data:{
+            studentId,statisticsTimes,subjectName
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
 // 更换关注的学生
 export function updateAttention(studentId) {
     return axios({
@@ -177,6 +204,15 @@ export function getNoticeByNoticeId(noticeId) {
     });
 }
 
+// 删除校园通知
+export function deleteParentNotice(noticeId) {
+    return axios({
+        method: 'DELETE',
+        url: api+`/parent/deleteParentNotice/${noticeId}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
 //家长留言板
 export function leaveParentMessageBoard(content) {
     return axios({
@@ -184,6 +220,26 @@ export function leaveParentMessageBoard(content) {
         url: api+`/parent/leaveParentMessageBoard`,
         data:{
             content
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//查询家长端留言聊天记录
+export function getParentMessage(techerId,pageIndex,pageSize) {
+    return axios({
+        method: 'GET',
+        url: api+`/parent/getParentMessage/${techerId}/${pageIndex}/${pageSize}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+//家长端发送留言
+export function sendParentMessage(teacherId,teacherName,content) {
+    return axios({
+        method: 'POST',
+        url: api+`/parent/sendParentMessage`,
+        data:{
+            teacherId,teacherName,content
         },
         headers: {'accessToken': localStorage.getItem('token')}
     });

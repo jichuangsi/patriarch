@@ -35,7 +35,7 @@
           v-for="(item,index) in time_nav"
           :key="index"
           @click="timenav(item)"
-        ><span><i v-if="time_text.indexOf(item) != -1"></i></span>{{item}}</div>
+        ><span><i v-if="time_text.indexOf(item.text) != -1"></i></span>{{item.text}}</div>
       </div>
       <div class="table">
         <table>
@@ -45,11 +45,8 @@
             <th>正确率</th>
             <th>班级平均正确率</th>
           </tr>
-          <tr>
-            <td>这是一段很长很长很长很长很长很长很长很长的文字</td>
-            <td>30%</td>
-            <td>40%</td>
-            <td>50%</td>
+          <tr v-for="(item,index) in tabletd" :key="index">
+            <td v-for="(val,valindex) in item.value" :key="valindex">{{val}}</td>
           </tr>
         </table>
       </div>
@@ -59,6 +56,7 @@
 
 <script>
 import top from "@/components/top";
+import {getStudentCourseScore,getStudentHomeworkScore} from '@/api/api'
 export default {
   name: "Report",
   components: {
@@ -69,6 +67,7 @@ export default {
       msg: "学情报表",
       back: true,
       navindex: 0,
+      studentId:'',
       subjectshow: false,
       center_nav: ["课堂", "习题", "考试"],
       subject_navtext:'语文',
@@ -83,15 +82,13 @@ export default {
         "历史",
         "化学"
       ],
-      dataname:['语文','数学','这是一段很长很长很长很长很长很长很长很长的文字','这是一段x很长很长很长很长很长很长很长很长的文字'],
-      datalist:[
-        {value:10,name:'语文'},
-        {value:20,name:'数学'},
-        {value:30,name:'这是一段很长很长很长很长很长很长很长很长的文字'},
-        {value:30,name:'这是一段x很长很长很长很长很长很长很长很长的文字'}
-      ],
+      dataname:[],
+      datalist:[],
       time_text:'',
-      time_nav:[]
+      time_nav:[],
+      stamp_text:'',
+      stamp_arr:[],
+      tabletd:[]
     };
   },
   mounted() {
@@ -104,25 +101,59 @@ export default {
       let month = date.getMonth() + 1;
       let day = date.getDate();
       this.time_text = month+'月'+day+'日'
-      this.time_nav = [month+'月'+day+'日',month+'月'+(Number(day)-1)+'日',month+'月'+(Number(day)-2)+'日',month+'月'+(Number(day)-3)+'日',month+'月'+(Number(day)-4)+'日']
-      console.log(this.time_nav)
+      this.time_nav = [{text:month+'月'+day+'日'},{text:month+'月'+(Number(day)-1)+'日'},{text:month+'月'+(Number(day)-2)+'日'},{text:month+'月'+(Number(day)-3)+'日'},{text:month+'月'+(Number(day)-4)+'日'}]
+      this.studentId = localStorage.getItem('student')?JSON.parse(localStorage.getItem('student'))[0].studentId:''
+      for(let i = 0 ; i < this.time_nav.length; i++){
+        this.time_nav[i].stamp = this.timestamp(i)
+      }
+      this.stamp_text = this.timestamp(0)+','
+      this.stamp_arr = [this.timestamp(0)]
+      this.CourseScore()
     },
     nav(index) {
       this.navindex = index;
+      console.log(index)
+      if(this.navindex == 0){
+        this.CourseScore()
+      }else if(this.navindex == 1){
+        this.HomeworkScore()
+      }
     },
     subjectnav(index,val) {
       this.subjectshow = false;
       this.subject_navtext = val;
+      if(this.navindex == 0){
+        this.CourseScore()
+      }else if(this.navindex == 1){
+        this.HomeworkScore()
+      }
     },
     timenav(val){
       if(this.time_text){
-        if(this.time_text.indexOf(val) != -1){
-          this.time_text = this.time_text.split(val)[0]+this.time_text.split(val)[1]
+        if(this.time_text.indexOf(val.text) != -1){
+          this.time_text = this.time_text.split(val.text)[0]+this.time_text.split(val.text)[1]
         }else{
-          this.time_text += val
+          this.time_text += val.text
         }
-      }else{
-        this.time_text += val
+      }else if(!this.time_text){
+        this.time_text += val.text
+      }
+      if(this.stamp_text){
+        if(this.stamp_text.indexOf(val.stamp) != -1){
+          this.stamp_text = this.stamp_text.split(val.stamp+ ',')[0]+this.stamp_text.split(val.stamp+ ',')[1]
+        }else{
+        this.stamp_text += val.stamp + ','
+        }
+      }else if(!this.stamp_text){
+        this.stamp_text += val.stamp + ','
+      }
+      this.stamp_arr = this.stamp_text.split(',').splice(0,this.stamp_text.split(',').length-1)
+      // console.log(arr)
+      // console.log(this.stamp_arr)
+      if(this.navindex == 0){
+        this.CourseScore()
+      }else if(this.navindex == 1){
+        this.HomeworkScore()
       }
     },
     drawLine () {
@@ -178,6 +209,47 @@ export default {
             color:['#347cf9','#58ce52','#ffc051','#4ba8ff','#ff7d8b','#ba61e8','#c622e5','#2feaf6','#ff7f8b']
           }
         ]
+      })
+    },
+    timestamp(n){
+      return new Date(new Date().toLocaleDateString()).getTime()-24*60*60*1000*n
+    },
+    CourseScore(){
+      getStudentCourseScore(this.studentId,this.stamp_arr,this.subject_navtext).then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          let arr1= []
+          let arr2= []
+          let arr3= []
+          for(let j = 0 ;j<res.data.data.length;j++){
+            arr1.push({id:j+1,value:[res.data.data[j].knowledgeName,(Number(res.data.data[j].knowledgeRate)*100).toFixed()+'%',(Number(res.data.data[j].studentRightRate)*100).toFixed()+'%',(Number(res.data.data[j].classRightAvgRate)*100).toFixed()+'%']}) 
+            arr2.push(res.data.data[j].knowledgeName)
+            arr3.push({value:(Number(res.data.data[j].knowledgeRate)*100).toFixed(),name:res.data.data[j].knowledgeName})
+          }
+          this.tabletd = arr1
+          this.dataname = arr2
+          this.datalist = arr3
+          this.drawLine()
+        }
+      })
+    },
+    HomeworkScore(){
+      getStudentHomeworkScore(this.studentId,this.stamp_arr,this.subject_navtext).then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          let arr1= []
+          let arr2= []
+          let arr3= []
+          for(let j = 0 ;j<res.data.data.length;j++){
+            arr1.push({id:j+1,value:[res.data.data[j].knowledgeName,(Number(res.data.data[j].knowledgeRate)*100).toFixed()+'%',(Number(res.data.data[j].studentRightRate)*100).toFixed()+'%',(Number(res.data.data[j].classRightAvgRate)*100).toFixed()+'%']}) 
+            arr2.push(res.data.data[j].knowledgeName)
+            arr3.push({value:(Number(res.data.data[j].knowledgeRate)*100).toFixed(),name:res.data.data[j].knowledgeName})
+          }
+          this.tabletd = arr1
+          this.dataname = arr2
+          this.datalist = arr3
+          this.drawLine()
+        }
       })
     }
   }

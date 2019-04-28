@@ -4,10 +4,10 @@
     <div class="center">
       <div class="title">{{title}}</div>
       <div class="content">
-        <textarea class="texts"></textarea>
+        <textarea class="texts" v-model="content"></textarea>
       </div>
       <div class="btn_nav">
-        <div class="btn">确认留言</div>
+        <div class="btn" @click="btn">确认留言</div>
       </div>
       <div class="text_box">
         <div class="other">其他联系方式：</div>
@@ -19,6 +19,8 @@
 </template>
 <script>
 import top from "@/components/top";
+import {Toast} from 'mint-ui'
+import {leaveParentMessageBoard} from '@/api/api'
 export default {
   name: "announcement",
   components: {
@@ -28,8 +30,20 @@ export default {
     return {
       msg: "联系我们",
       title: "给我们留言：",
-      back:true
+      back:true,
+      content:''
     };
+  },
+  mounted:{
+    btn(){
+      leaveParentMessageBoard(this.content).then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          Toast('发送成功')
+          this.content = ''
+        }
+      })
+    }
   }
 };
 </script>

@@ -14,10 +14,6 @@
           </div>
         </div>
       </div>
-      <!-- <button @click="btn">获取OPENID</button>
-      <button @click="btn2">获取个人信息</button> -->
-      <button @click="btn3">获取token</button>
-      <button @click="btn4">获取</button>
     </div>
     <div class="setbox" v-if="setshow">
       <div class="set_box">
@@ -32,13 +28,13 @@
       </div>
     </div>
     <!-- <button @click="btn1">czcz</button> -->
-    <div class="login" v-if="loginshow">
+    <!-- <div class="login" v-if="loginshow">
         <div class="text">集创思  申请使用</div>
         <div class="text1">以下信息</div>
         <div class="text2"><span>✔</span>你的账号信息（昵称、头像、地区与性别）</div>
         <div class="login_confirm" @click="login">确认</div>
         <div class="login_cancel" @click="cancel">取消</div>
-    </div>
+    </div> -->
     <foot :current="current"></foot>
   </div>
 </template>
@@ -47,7 +43,7 @@
 import top from '@/components/top'
 import foot from '@/components/foot'
 import { Toast } from 'mint-ui'
-import {tokenwx,getWxToken,getParentInfo,loginParentService,getBindStudentInfo,parentBindStudent,getStudentTeachers,getAttentions} from '@/api/api'
+import {getWxToken,getParentInfo,loginParentService,getBindStudentInfo,parentBindStudent,getStudentTeachers,getAttentions} from '@/api/api'
 export default {
   name: 'index',
   components: {
@@ -66,7 +62,8 @@ export default {
     }
   },
   mounted(){
-    this.btn()
+    // window.location='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
+    this.getdata()
   },
   methods:{
     jump(item){
@@ -76,86 +73,54 @@ export default {
         
       })
     },
-    // btn1(){
-    // let Appid = 'wx6242cfcc7e43e927'
-    //   window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
-    // },
-    btn(){  //第二次跳转获取code
-    let Appid = 'wx124c0ab234287c8c'
-    let user = localStorage.getItem('user')?localStorage.getItem('user'):''
-    if(user){
-      this.loginshow = false
+    getdata(){
       let token = localStorage.getItem('token')?localStorage.getItem('token'):''
-      if(token){
-        this.getdata()
+      let student = JSON.parse(localStorage.getItem('student'))?JSON.parse(localStorage.getItem('student')):''
+      if(token&&student){
+        getStudentTeachers(student[0].studentId).then(res=>{  //查询绑定学生老师信息
+          if(res.data.code == '0010'){
+          this.teacherlist = res.data.data
+          }
+        })
       }else {
-        this.btn2()
+        this.login()
       }
-    }else{
-      // this.loginshow = true
-      this.login()
-    }
     },
     login(){
       let code = window.location.href
       code = code.split('?')[1].split('&')[0].split('=')[1]
-      getWxToken(code).then(res=>{
-        console.log(res)
+      getWxToken(code).then(res=>{  //获取wxtoken和openid
         if(res.data.code == '0010') {
-          localStorage.setItem('user',res.data.data.access_token+'&'+res.data.data.openid)
-          window.location = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
-        }
-      })
-    },
-    btn2() {  //获取基本信息
-      let code = window.location.href
-      let token = localStorage.getItem('user').split('&')[0]
-      let openid = localStorage.getItem('user').split('&')[1]
-          code = code.split('?')[1].split('&')[0].split('=')[1]
-          getParentInfo(token,openid,code).then(res=>{
-            console.log(res)
-            if(res.data.code == '0010') {
-              loginParentService(res.data.data.nickname,res.data.data.openid).then(res=>{
-                console.log(res)
-                if(res.data.code == "0010") {
+          getParentInfo(res.data.data.access_token,res.data.data.openid).then(res=>{
+            if(res.data.code == '0010'){   //获取wx用户信息
+            localStorage.setItem('user',JSON.stringify(res.data.data))
+              loginParentService(res.data.data.nickname,res.data.data.openid,res.data.data.headimgurl).then(res=>{
+                if(res.data.code == "0010") {   //获取应用token
                   localStorage.setItem('token',res.data.data)
-                  getBindStudentInfo().then(res=>{
-                    console.log(res)
+                  getBindStudentInfo().then(res=>{   //查询是否绑定学生
                     if(res.data.code=='0010'){
-
+                      this.setshow = false
+                      getAttentions().then(res=>{  //查询绑定学生信息
+                      if(res.data.code == '0010') {
+                        this.student = res.data.data
+                        localStorage.setItem('student',JSON.stringify(res.data.data))
+                        getStudentTeachers(this.student.studentId).then(res=>{  //查询绑定学生老师信息
+                        if(res.data.code == '0010'){
+                          this.teacherlist = res.data.data
+                        }
+                      })
+                      }
+                    })
                     }else {
                       this.setshow = true
-                    }
-                  }).catch(e=>{
-                    console.log(e)
-                  })
-                    getAttentions().then(res=>{
-                    console.log(res)
-                    if(res.data.code == '0010') {
-                      this.student = res.data.data
-                      localStorage.setItem('student',JSON.stringify(res.data.data))
                     }
                   })
                 }
               })
             }
           })
-    },
-    getdata(){
-      getStudentTeachers(this.student.studentId).then(res=>{
-        console.log(res)
-        if(res.data.code == '0010'){
-          this.teacherlist = res.data.data
         }
       })
-    },
-    btn3(){
-      tokenwx().then(res=>{
-        console.log(res)
-      })
-    },
-    btn4(){
-      window.location = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx124c0ab234287c8c&secret=833fcfda44d153686bbdd0a10450bf08'
     },
     confirm() {
       parentBindStudent(this.studentAccount).then(res=>{
@@ -165,9 +130,6 @@ export default {
           this.setshow = false
         }
       })
-    },
-    cancel(){
-      WeixinJSBridge.call('closeWindow')
     }
   }
 }

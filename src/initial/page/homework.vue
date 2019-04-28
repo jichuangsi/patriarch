@@ -3,28 +3,28 @@
     <top :msg ="msg" :back="back"></top>
     <div class="center">
         <div class="center_nav">
-            <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}" @click="subject(index)">{{item}}</div>
+            <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}" @click="subject(index,item)">{{item}}</div>
         </div>
-        <div class="center_box" v-for="(item,index) in message_nav" :key="index">
+        <div class="center_box" v-for="(item,index) in message_nav" :key="index" v-if="center_text==item.subjectName||center_text=='全部'">
             <div class="left">
-                <img src="../../assets/img/语文_03.png" alt="" v-if="item.color==0">
-                <img src="../../assets/img/数学_03.png" alt="" v-if="item.color==1">
-                <img src="../../assets/img/英语_03.png" alt="" v-if="item.color==2">
-                <img src="../../assets/img/物理_03.png" alt="" v-if="item.color==3">
-                <img src="../../assets/img/地理_03.png" alt="" v-if="item.color==4">
-                <img src="../../assets/img/政治_03.png" alt="" v-if="item.color==5">
-                <img src="../../assets/img/历史_03.png" alt="" v-if="item.color==6">
-                <img src="../../assets/img/生物_03.png" alt="" v-if="item.color==7">
-                <img src="../../assets/img/化学_03.png" alt="" v-if="item.color==9">
+                <img src="../../assets/img/语文_03.png" alt="" v-if="item.subjectName=='语文'">
+                <img src="../../assets/img/数学_03.png" alt="" v-if="item.subjectName=='数学'">
+                <img src="../../assets/img/英语_03.png" alt="" v-if="item.subjectName=='英语'">
+                <img src="../../assets/img/物理_03.png" alt="" v-if="item.subjectName=='物理'">
+                <img src="../../assets/img/地理_03.png" alt="" v-if="item.subjectName=='地理'">
+                <img src="../../assets/img/政治_03.png" alt="" v-if="item.subjectName=='政治'">
+                <img src="../../assets/img/历史_03.png" alt="" v-if="item.subjectName=='历史'">
+                <img src="../../assets/img/生物_03.png" alt="" v-if="item.subjectName=='生物'">
+                <img src="../../assets/img/化学_03.png" alt="" v-if="item.subjectName=='化学'">
             </div>
             <div class="right">
-                <div class="title">{{item.message}}</div>
-                <div class="text">2019年3月7日星期四18：06</div>
-                <div class="details" v-if="item.status == 0">
+                <div class="title">习题：{{item.homeWorkName}}</div>
+                <div class="text">{{item.endTime}}</div>
+                <div class="details" v-if="item.status == '提交'">
                     <div class="status">✔</div>
                     <div class="statustext">已提交</div>
                 </div>
-                <div class="details" v-if="item.status == 1">
+                <div class="details" v-if="item.status == '未提交'">
                     <div class="status orange">!</div>
                     <div class="statustext">未提交</div>
                 </div>
@@ -47,28 +47,36 @@ export default {
       msg:'当天作业',
       back:true,
       navindex:0,
-      center_nav:['语文','数学','英语','物理','地理','政治','生物','历史','化学'],
+      center_text:'全部',
+      center_nav:['全部','语文','数学','英语','物理','地理','政治','生物','历史','化学'],
       id:'',
-      message_nav:[
-          {color:'0',message:'习题：背影课文预习',status:0},
-          {color:'1',message:'习题：背影课文预习',status:0},
-          {color:'2',message:'习题：背影课文预习',status:1},
-      ]
+      message_nav:[]
     }
   },
   mounted () {
       this.getdata()
   },
   methods:{
-      subject(index){
+      subject(index,val){
           this.navindex = index
+          this.center_text = val
       },
       getdata() {
         this.id = JSON.parse(localStorage.getItem('student'))[0].studentId
         getStudentHomeWork(this.id).then(res=>{
             console.log(res)
+            if(res.data.code == '0010'){
+                this.message_nav = res.data.data
+                for(let i = 0; i<this.message_nav.length;i++){
+                    this.message_nav[i].endTime = this.getLocalTime(this.message_nav[i].endTime)
+                }
+                console.log(this.message_nav)
+            }
         })
-      }
+      },
+    getLocalTime(nS) {     
+    return new Date(parseInt(nS)).toLocaleString().replace(/:\d{1,2}$/,' ');     
+    }
   }
 }
 </script>

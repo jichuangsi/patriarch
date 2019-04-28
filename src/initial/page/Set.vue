@@ -86,7 +86,7 @@
 
 <script>
 import top from '@/components/top'
-import {parentBindStudent,getAttentions,deleteBindStudent,getParentBindInfo,setParentAccount,setParentNewPwd} from '@/api/api'
+import {parentBindStudent,getAttentions,deleteBindStudent,getParentBindInfo,setParentAccount,setParentNewPwd,bindParentPhone} from '@/api/api'
 import { Toast } from 'mint-ui'
 export default {
   name: 'set',
@@ -147,9 +147,6 @@ export default {
       })
     },
     Gatewayconfirm(){
-      console.log(this.GatewayAccount)
-      console.log(this.Gatewaypsw)
-      console.log(this.Gatewaypsw_)
       if(this.Gateway){
         if(this.Gatewaypsw == this.Gatewaypsw_){
             setParentNewPwd(this.Gatewaypsw).then(res=>{
@@ -191,7 +188,13 @@ export default {
       })
     },
     phoneconfirm(){
-
+      bindParentPhone(this.phone).then(res=>{
+        if(res.data.code =='0010'){
+                Toast('绑定成功')
+          this.getdata()
+          this.phoneshow = false
+        }
+      })
     }
   }
 }

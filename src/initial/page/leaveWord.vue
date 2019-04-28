@@ -16,10 +16,18 @@
           </div>
         </div>
       </div>
-      <div class="message clearfix">
-        <div class="messagebox">
-          <div class="userimg"></div>
-          <div class="message_box"></div>
+      <div class="message clearfix" v-for="(item,index) in messagelist" :key="index">
+        <div class="messagebox" :class="{fr:item.sendFrom == 'P',fl:item.sendFrom == 'T'}">
+          <div class="userimg" v-if="item.sendFrom == 'P'"><img :src="userimg" alt=""></div>
+          <div class="userimg" v-if="item.sendFrom == 'T'"></div>
+          <div class="message_box">{{item.content}}</div>
+        </div>
+      </div>
+      <h4>--历史消息--</h4>
+      <div class="message clearfix" v-for="(item,index) in messagenewlist" :key="index">
+        <div class="messagebox fr">
+          <div class="userimg fr"><img :src="userimg" alt=""></div>
+          <div class="message_box fr">{{item}}</div>
         </div>
       </div>
     </div>
@@ -31,7 +39,7 @@
 </template>
 <script>
 import top from "@/components/top";
-import {leaveParentMessageBoard} from '@/api/api'
+import {getParentMessage,sendParentMessage} from '@/api/api'
 export default {
   name: "announcement",
   components: {
@@ -43,18 +51,33 @@ export default {
       back: true,
       teacher:'',
       messagelist:[],
-      messagetext:''
+      messagenewlist:[],
+      messagetext:'',
+      userimg:''
     };
   },
   mounted() {
     this.teacher = this.$store.state.teacher
-    console.log(this.$store.state.teacher)
+    this.userimg = JSON.parse(localStorage.getItem('user'))?JSON.parse(localStorage.getItem('user')).headimgurl:''
+    this.getdata()
   },
   methods:{
     btn(){
-      console.log(this.messagetext)
-      leaveParentMessageBoard(this.messagetext).then(res=>{
+      // sendParentMessage(this.teacher.id,this.teacher.name,this.messagetext).then(res=>{
+      //   console.log(res)
+      //   if(res.data.code == '0010'){
+          this.messagenewlist.push(this.messagetext)
+          this.messagetext = ''
+      //   }
+      // })
+    },
+    getdata(){
+      console.log(this.teacher.id)
+      getParentMessage(this.teacher.id,1,10).then(res=>{
         console.log(res)
+        if(res.data.code == '0010'){
+          this.messagelist = res.data.data.list
+        }
       })
     }
   }
@@ -68,6 +91,7 @@ export default {
     padding: 30px 45px 100px 45px;
     .nav {
       width: 100%;
+      margin-bottom: 30px;
       .nav_box {
         width: 100%;
         height: 200px;
@@ -121,6 +145,30 @@ export default {
     }
     .message {
       width: 100%;
+      margin-bottom: 30px;
+      .userimg {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        vertical-align: middle;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .message_box {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-right: 20px;
+        padding: 20px 30px;
+        border: 2px solid #2a8cf7;
+        border-radius: 30px;
+      }
+    }
+    h4 {
+      text-align: center;
+      margin: 10px auto;
     }
   }
     .ipt {
