@@ -16,6 +16,8 @@
           </div>
         </div>
       </div>
+      <div id="content">
+      <mt-loadmore :auto-fill="false" :top-method="loadTop" :bottom-all-loaded="allLoaded" ref="loadmore">
       <div class="message clearfix" v-for="(item,index) in messagelist" :key="index">
         <div class="messagebox" :class="{fr:item.sendFrom == 'P',fl:item.sendFrom == 'T'}">
           <div class="userimg" v-if="item.sendFrom == 'P'"><img :src="userimg" alt=""></div>
@@ -30,6 +32,8 @@
           <div class="message_box fr">{{item}}</div>
         </div>
       </div>
+      </mt-loadmore>
+      </div>
     </div>
       <div class="ipt">
         <input type="text" v-model="messagetext">
@@ -39,6 +43,7 @@
 </template>
 <script>
 import top from "@/components/top";
+import { Loadmore } from 'mint-ui'
 import {getParentMessage,sendParentMessage} from '@/api/api'
 export default {
   name: "announcement",
@@ -53,7 +58,11 @@ export default {
       messagelist:[],
       messagenewlist:[],
       messagetext:'',
-      userimg:''
+      userimg:'',
+      pageindex:1,
+      pagesize:1,
+      allLoaded:false,
+      pageshow:false
     };
   },
   mounted() {
@@ -63,22 +72,34 @@ export default {
   },
   methods:{
     btn(){
-      // sendParentMessage(this.teacher.id,this.teacher.name,this.messagetext).then(res=>{
+      sendParentMessage(this.teacher.id,this.teacher.name,this.messagetext).then(res=>{
       //   console.log(res)
-      //   if(res.data.code == '0010'){
+        if(res.data.code == '0010'){
           this.messagenewlist.push(this.messagetext)
           this.messagetext = ''
-      //   }
-      // })
-    },
-    getdata(){
-      console.log(this.teacher.id)
-      getParentMessage(this.teacher.id,1,10).then(res=>{
-        console.log(res)
-        if(res.data.code == '0010'){
-          this.messagelist = res.data.data.list
         }
       })
+    },
+    getdata(){
+      getParentMessage(this.teacher.id,this.pageindex,this.pagesize).then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          this.messagelist.push(...res.data.data.list)
+          if(res.data.data.list == ''){
+            this.pageshow = true
+          }
+        }
+      })
+    },
+    loadTop(){
+      if(this.pageshow){
+        this.allLoaded = true
+        this.$refs.loadmore.onBottomLoaded()
+      }else {
+        this.pageindex++
+        this.getdata()
+            this.$refs.loadmore.onTopLoaded()
+      }
     }
   }
 };
@@ -194,6 +215,9 @@ export default {
         background-color: #3d72fe;
         margin-left: 20px;
       }
+    }
+    #content {
+      overflow: scroll;
     }
 }
 </style>

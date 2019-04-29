@@ -62,7 +62,7 @@ export default {
     }
   },
   mounted(){
-    // window.location='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx124c0ab234287c8c&redirect_uri=http://patriarch.jichuangsi.com&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
+    // window.location='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6242cfcc7e43e927&redirect_uri=http://127.0.0.1&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
     this.getdata()
   },
   methods:{
@@ -82,7 +82,19 @@ export default {
           this.teacherlist = res.data.data
           }
         })
-      }else {
+      }else if(!token&&student){
+        loginParentService(res.data.data.nickname,res.data.data.openid,res.data.data.headimgurl).then(res=>{
+          if(res.data.code == "0010") {   //刷新token
+        localStorage.setItem('token',res.data.data)
+        getStudentTeachers(student[0].studentId).then(res=>{  //查询绑定学生老师信息
+          if(res.data.code == '0010'){
+          this.teacherlist = res.data.data
+          }
+        })
+          }
+        })
+      }
+      else if(!token&&!student) {
         this.login()
       }
     },
@@ -100,17 +112,6 @@ export default {
                   getBindStudentInfo().then(res=>{   //查询是否绑定学生
                     if(res.data.code=='0010'){
                       this.setshow = false
-                      getAttentions().then(res=>{  //查询绑定学生信息
-                      if(res.data.code == '0010') {
-                        this.student = res.data.data
-                        localStorage.setItem('student',JSON.stringify(res.data.data))
-                        getStudentTeachers(this.student.studentId).then(res=>{  //查询绑定学生老师信息
-                        if(res.data.code == '0010'){
-                          this.teacherlist = res.data.data
-                        }
-                      })
-                      }
-                    })
                     }else {
                       this.setshow = true
                     }
@@ -124,10 +125,20 @@ export default {
     },
     confirm() {
       parentBindStudent(this.studentAccount).then(res=>{
-        console.log(res)
         if(res.data.code == '0010') {
           Toast('绑定成功')
           this.setshow = false
+                      getAttentions().then(res=>{  //查询绑定学生信息
+                      if(res.data.code == '0010') {
+                        this.student = res.data.data
+                        localStorage.setItem('student',JSON.stringify(res.data.data))
+                        getStudentTeachers(this.student[0].studentId).then(res=>{  //查询绑定学生老师信息
+                        if(res.data.code == '0010'){
+                          this.teacherlist = res.data.data
+                        }
+                      })
+                      }
+                    })
         }
       })
     }
@@ -259,7 +270,7 @@ export default {
         margin: -10px;
         float: right;
         padding: 5px 20px;
-        font-size: 28px;
+        font-size: 36px;
       }
       .empty {
         margin: 0px;

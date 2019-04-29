@@ -15,22 +15,28 @@
                 <div class="left" @click="educationbtn" :class="{left_top:btn==1}">教育头条</div>
                 <div class="right" @click="Parentbtn" :class="{right_top:btn==2}">家长课堂</div>
             </div>
-            <div class="down" v-for="(item,index) in nav" :key="index" @click="jump(item)">
-                <div class="left">
-                    <img :src="item.picurl" alt="">
-                </div>
-                <div class="right">
-                    <div class="title" v-html="item.title"></div>
-                    <div class="text" v-html="item.content">
+            <div id="content">
+                <mt-loadmore :auto-fill="false" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
+                    <div class="down" v-for="(item,index) in nav" :key="index" @click="jump(item)">
+                        <div class="left">
+                            <img :src="item.picurl" alt="">
+                        </div>
+                        <div class="right">
+                            <div class="title" v-html="item.title"></div>
+                            <div class="text" v-html="item.content">
+                            </div>
+                            <div class="nav">
+                                    <div><i class="iconfont icon-liulan"></i><span>{{item.view}}</span></div>
+                                    <div><i class="iconfont icon-dianzan"></i><span>{{item.agree}}</span></div>
+                                    <div><i class="iconfont icon-pinglun"></i><span>{{item.replynum}}</span></div>
+                                    <div><i class="iconfont icon-shoucang"></i><span>0</span></div>
+                            </div>
+                            <div class="details">查看详情 ></div>
+                        </div>
                     </div>
-                    <div class="nav">
-                            <div><i class="iconfont icon-liulan"></i><span>{{item.view}}</span></div>
-                            <div><i class="iconfont icon-dianzan"></i><span>{{item.agree}}</span></div>
-                            <div><i class="iconfont icon-pinglun"></i><span>{{item.replynum}}</span></div>
-                            <div><i class="iconfont icon-shoucang"></i><span>0</span></div>
-                    </div>
-                    <div class="details">查看详情 ></div>
-                </div>
+                    <div class="more" v-if="!pageshow">---上拉加载更多---</div>
+                    <div class="more" v-if="pageshow">---没有更多---</div>
+                </mt-loadmore>
             </div>
         </div>
     </div>
@@ -41,7 +47,7 @@
 <script>
 import top from '@/components/top'
 import foot from '@/components/foot'
-import { Swipe, SwipeItem } from 'mint-ui'
+import { Swipe, SwipeItem, Loadmore } from 'mint-ui'
 import {data} from '@/api/api'
 export default {
   name: 'education',
@@ -56,9 +62,11 @@ export default {
       back:false,
       current:2,
       btn:1,
-      pageindex:1,
+      pageindex:0,
       pagesize:10,
-      nav:[]
+      nav:[],
+      allLoaded:false,
+      pageshow:false
     }
   },
   mounted(){
@@ -68,20 +76,39 @@ export default {
       getdata() {
           data(this.btn,this.pageindex,this.pagesize).then(res=>{
               console.log(res)
-              this.nav = res.data
+              this.nav.push(...res.data)
+              if(res.data == ''){
+                  this.pageshow = true
+              }
           })
       },
       educationbtn(){
           this.btn = 1
+          this.nav = []
+          this.pageshow = false
+          this.allLoaded = false
           this.getdata()
       },
       Parentbtn(){
           this.btn = 2
+          this.nav = []
+          this.pageshow = false
+          this.allLoaded = false
           this.getdata()
       },
       jump(item){
           this.$router.push({path:'/News',query:{id:item.id}})
-      }
+      },
+    loadBottom () {
+        if(this.pageshow) {
+            this.allLoaded = true
+            this.$refs.loadmore.onBottomLoaded()
+        }else{
+            this.pageindex++
+            this.getdata()
+            this.$refs.loadmore.onBottomLoaded()
+        }
+    },
   }
 }
 </script>
@@ -243,7 +270,14 @@ export default {
                     }
                 }
             }
+                .more {
+                    margin-top: 20px;
+                    text-align: center;
+                }
         }
+    }
+    #content {
+        overflow: scroll;   
     }
 }
 </style>

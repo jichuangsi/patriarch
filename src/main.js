@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios';
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import 'lib-flexible'
@@ -29,4 +30,22 @@ router.afterEach((to,from,next) => {
 
   window.scrollTo(0,0);
 
+})
+
+// 判断token是否失效
+axios.interceptors.response.use(response => {
+  if (response) {
+      switch (response.data.code) {
+
+          case '0031': //与后台约定登录失效的返回码,根据实际情况处理
+          localStorage.removeItem('token')
+              router.replace({
+                  path: '/'
+              })
+      }
+  }
+  return response;
+}, error => {
+
+  return Promise.reject(error.response.data) //返回接口返回的错误信息
 })

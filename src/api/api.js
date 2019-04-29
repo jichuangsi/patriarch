@@ -2,6 +2,9 @@ import axios from 'axios';
 import Vue from 'vue'
 // let api = 'http://192.168.31.154:7979'
 let api = 'http://api.jichuangsi.com/PARENTSERVICE'
+// let api = 'http://192.168.31.154:8888/PARENTSERVICE'
+
+
 
 // 获取token，openid
 export function getWxToken(code) {

@@ -81,6 +81,10 @@ export default {
             }
           }
       }
+            img {
+                display: block;
+                width: 100% !important;
+            }
   }
   .foot {
     position: fixed;
