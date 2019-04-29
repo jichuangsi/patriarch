@@ -7,7 +7,9 @@
     <div class="center">
       <div class="nav">
         <div class="nav_box">
-          <div class="left"></div>
+          <div class="left">
+            <img src="../../assets/img/男老师.png" alt="">
+          </div>
           <div class="right">
             <div class="name">老师姓名：{{teacher.name}}</div>
             <div class="subject">任教科目：{{teacher.subject}}</div>
@@ -19,10 +21,10 @@
       <div id="content">
       <mt-loadmore :auto-fill="false" :top-method="loadTop" :bottom-all-loaded="allLoaded" ref="loadmore">
       <div class="message clearfix" v-for="(item,index) in messagelist" :key="index">
-        <div class="messagebox" :class="{fr:item.sendFrom == 'P',fl:item.sendFrom == 'T'}">
-          <div class="userimg" v-if="item.sendFrom == 'P'"><img :src="userimg" alt=""></div>
-          <div class="userimg" v-if="item.sendFrom == 'T'"></div>
-          <div class="message_box">{{item.content}}</div>
+        <div class="messagebox fr" :class="{fr:item.sendFrom == 'P',fl:item.sendFrom == 'T'}">
+          <div class="userimg fr" v-if="item.sendFrom == 'P'"><img :src="userimg" alt=""></div>
+          <div class="userimg fl" v-if="item.sendFrom == 'T'"></div>
+          <div class="message_box fr" :class="{'fl':item.sendFrom == 'T','fr':item.sendFrom == 'P'}">{{item.content}}</div>
         </div>
       </div>
       <h4>--历史消息--</h4>
@@ -126,6 +128,12 @@ export default {
           height: 164px;
           border-radius: 20px;
           background-color: #666;
+          img {
+            width: 105%;
+            height: 105%;
+            margin-top: -4px;
+            margin-left: -4px;
+          }
         }
         .right {
           flex: 1;

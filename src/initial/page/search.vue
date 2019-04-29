@@ -10,14 +10,14 @@
                 <mt-loadmore :auto-fill="false" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
                     <div class="down" v-for="(item,index) in nav" :key="index" @click="jump(item)">
                     <div class="left">
-                        <img :src="item.picurl" alt="">
+                        <img :src="item.picurl.indexOf(',')!=-1?item.picurl.split(',')[0]:item.picurl" alt="">
                     </div>
                     <div class="right">
                         <div class="title" v-html="item.title"></div>
                         <div class="status blue" v-if="item.status=='1'">教育头条</div>
                         <div class="status green" v-if="item.status=='2'">家长课堂</div>
-                        <div class="text" v-html="item.content">
-                        </div>
+                        <!-- <div class="text" v-html="item.content">
+                        </div> -->
                         <div class="nav">
                                 <div><i class="iconfont icon-liulan"></i><span>{{item.view}}</span></div>
                                 <div><i class="iconfont icon-dianzan"></i><span>{{item.agree}}</span></div>
@@ -60,6 +60,10 @@ export default {
   },
   methods:{
       search(){
+          this.nav = []
+          this.getdata()
+      },
+      getdata(){
           query(this.searchtext,this.pageindex,this.pagesize).then(res=>{
               this.nav.push(...res.data)
               if(res.data == ''){
@@ -76,7 +80,7 @@ export default {
             this.$refs.loadmore.onBottomLoaded()
         }else{
             this.pageindex++
-            this.search()
+            this.getdata()
             this.$refs.loadmore.onBottomLoaded()
         }
     },
@@ -182,9 +186,11 @@ export default {
                     .nav {
                         div {
                             display: inline-block;
+                            margin-top: 96px;
                             i {
                                 vertical-align: middle;
-                                font-size: 22px;
+                                font-size: 26px;
+                                margin-right: 5px;
                             }
                             span {
                                 font-size: 20px;

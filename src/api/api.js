@@ -3,6 +3,7 @@ import Vue from 'vue'
 // let api = 'http://192.168.31.154:7979'
 let api = 'http://api.jichuangsi.com/PARENTSERVICE'
 // let api = 'http://192.168.31.154:8888/PARENTSERVICE'
+let host = 'www.api.jichuangsi.com/'
 
 
 
@@ -252,7 +253,7 @@ export function sendParentMessage(teacherId,teacherName,content) {
 export function data(status,pageindex,pagesize) {
     return axios({
         method: 'post',
-        url: 'http://192.168.31.123/parentjournalism/getlist.php?status='+status+'&pageindex='+pageindex+'&pagesize='+pagesize,
+        url: host+'/parentjournalism/getlist.php?status='+status+'&pageindex='+pageindex+'&pagesize='+pagesize,
         // headers: {'accessToken': localStorage.getItem('token')}
     });
 }
@@ -260,7 +261,7 @@ export function data(status,pageindex,pagesize) {
 export function details(infoid) {
     return axios({
         method: 'post',
-        url: 'http://192.168.31.123/parentjournalism/getinfo.php?infoid='+infoid,
+        url: host+'/parentjournalism/getinfo.php?infoid='+infoid,
         // headers: {'accessToken': localStorage.getItem('token')}
     });
 }
@@ -268,14 +269,14 @@ export function details(infoid) {
 export function query(title,pageindex,pagesize) {
     return axios({
         method: 'post',
-        url: 'http://192.168.31.123/parentjournalism/getlookup.php?title='+title+'&pageindex='+pageindex+'&pagesize='+pagesize,
+        url: host+'/parentjournalism/getlookup.php?title='+title+'&pageindex='+pageindex+'&pagesize='+pagesize,
         // headers: {'accessToken': localStorage.getItem('token')}
     });
 }
 
 
 let ajax = axios.create({
-    baseURL:'http://192.168.31.154:8888/PARENTSERVICE',
+    baseURL:api,
     headers: {
       "Content-Type": "multipart/form-data",
       'accessToken': localStorage.getItem('token') ,

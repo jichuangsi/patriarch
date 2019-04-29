@@ -19,12 +19,12 @@
                 <mt-loadmore :auto-fill="false" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
                     <div class="down" v-for="(item,index) in nav" :key="index" @click="jump(item)">
                         <div class="left">
-                            <img :src="item.picurl" alt="">
+                            <img :src="item.picurl.indexOf(',')!=-1?item.picurl.split(',')[0]:item.picurl" alt="">
                         </div>
                         <div class="right">
                             <div class="title" v-html="item.title"></div>
-                            <div class="text" v-html="item.content">
-                            </div>
+                            <!-- <div class="text" v-html="item.content">
+                            </div> -->
                             <div class="nav">
                                     <div><i class="iconfont icon-liulan"></i><span>{{item.view}}</span></div>
                                     <div><i class="iconfont icon-dianzan"></i><span>{{item.agree}}</span></div>
@@ -75,10 +75,10 @@ export default {
   methods:{
       getdata() {
           data(this.btn,this.pageindex,this.pagesize).then(res=>{
-              console.log(res)
               this.nav.push(...res.data)
               if(res.data == ''){
                   this.pageshow = true
+                  
               }
           })
       },
@@ -252,9 +252,11 @@ export default {
                     .nav {
                         div {
                             display: inline-block;
+                            margin-top: 96px;
                             i {
                                 vertical-align: middle;
-                                font-size: 22px;
+                                font-size: 26px;
+                                margin-right: 5px;
                             }
                             span {
                                 font-size: 20px;

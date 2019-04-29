@@ -5,7 +5,9 @@
       <div class="text">{{student.className}}</div>
       <div class="nav">
         <div class="nav_box" @click="jump(item)" v-for="(item,index) in teacherlist" :key="index">
-          <div class="left"></div>
+          <div class="left">
+            <img src="../assets/img/男老师.png" alt="">
+          </div>
           <div class="right">
             <div class="name">老师姓名：{{item.name}}</div>
             <div class="subject">任教科目：{{item.subject}}</div>
@@ -76,14 +78,15 @@ export default {
     getdata(){
       let token = localStorage.getItem('token')?localStorage.getItem('token'):''
       let student = JSON.parse(localStorage.getItem('student'))?JSON.parse(localStorage.getItem('student')):''
-      if(token&&student){
+      let user = JSON.parse(localStorage.getItem('user'))?JSON.parse(localStorage.getItem('user')):''
+      if(token&&student&&user){
         getStudentTeachers(student[0].studentId).then(res=>{  //查询绑定学生老师信息
           if(res.data.code == '0010'){
           this.teacherlist = res.data.data
           }
         })
       }else if(!token&&student){
-        loginParentService(res.data.data.nickname,res.data.data.openid,res.data.data.headimgurl).then(res=>{
+        loginParentService(user.nickname,user.openid,user.headimgurl).then(res=>{
           if(res.data.code == "0010") {   //刷新token
         localStorage.setItem('token',res.data.data)
         getStudentTeachers(student[0].studentId).then(res=>{  //查询绑定学生老师信息
@@ -94,7 +97,7 @@ export default {
           }
         })
       }
-      else if(!token&&!student) {
+      else if(!token&&!student&&!user) {
         this.login()
       }
     },
@@ -111,7 +114,18 @@ export default {
                   localStorage.setItem('token',res.data.data)
                   getBindStudentInfo().then(res=>{   //查询是否绑定学生
                     if(res.data.code=='0010'){
-                      this.setshow = false
+                      this.setshow = false 
+                      getAttentions().then(res=>{  //查询绑定学生信息
+                      if(res.data.code == '0010') {
+                        this.student = res.data.data
+                        localStorage.setItem('student',JSON.stringify(res.data.data))
+                        getStudentTeachers(this.student[0].studentId).then(res=>{  //查询绑定学生老师信息
+                        if(res.data.code == '0010'){
+                          this.teacherlist = res.data.data
+                        }
+                      })
+                      }
+                    })
                     }else {
                       this.setshow = true
                     }
@@ -174,6 +188,12 @@ export default {
           height: 164px;
           border-radius: 20px;
           background-color: #666;
+          img {
+            width: 105%;
+            height: 105%;
+            margin-top: -4px;
+            margin-left: -4px;
+          }
         }
         .right {
           flex: 1;
