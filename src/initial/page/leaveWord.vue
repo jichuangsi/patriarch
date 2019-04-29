@@ -60,7 +60,7 @@ export default {
       messagetext:'',
       userimg:'',
       pageindex:1,
-      pagesize:1,
+      pagesize:10,
       allLoaded:false,
       pageshow:false
     };
@@ -98,7 +98,7 @@ export default {
       }else {
         this.pageindex++
         this.getdata()
-            this.$refs.loadmore.onTopLoaded()
+        this.$refs.loadmore.onTopLoaded()
       }
     }
   }
