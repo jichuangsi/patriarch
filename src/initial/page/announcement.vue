@@ -18,7 +18,7 @@
         <span class="date">{{date}}</span>
       </div>
     </div>
-    <div class="notice_text">{{announcement}}</div>
+    <div class="notice_text" v-html="announcement"></div>
   </div>
 </template>
 <script>
