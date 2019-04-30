@@ -45,7 +45,9 @@ export default {
       getdata(){
           details(this.id).then(res=>{  
               console.log(res)
-              this.news = res.data[0]
+              if(res.data.code == '0010'){
+                this.news = res.data.data[0]
+              }
           })
       },
       btn(){

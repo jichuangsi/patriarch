@@ -75,16 +75,19 @@ export default {
   methods:{
       getdata() {
           data(this.btn,this.pageindex,this.pagesize).then(res=>{
-              this.nav.push(...res.data)
-              if(res.data == ''){
-                  this.pageshow = true
-                  
+              console.log(res)
+              if(res.data.code == '0010'){
+                this.nav.push(...res.data.data)
+                if(res.data.data == ''){
+                    this.pageshow = true
+                }
               }
           })
       },
       educationbtn(){
           this.btn = 1
           this.nav = []
+          this.pageindex = 0
           this.pageshow = false
           this.allLoaded = false
           this.getdata()
@@ -92,6 +95,7 @@ export default {
       Parentbtn(){
           this.btn = 2
           this.nav = []
+          this.pageindex = 0
           this.pageshow = false
           this.allLoaded = false
           this.getdata()

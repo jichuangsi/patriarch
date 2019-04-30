@@ -3,7 +3,7 @@ import Vue from 'vue'
 // let api = 'http://192.168.31.154:7979'
 let api = 'http://api.jichuangsi.com/PARENTSERVICE'
 // let api = 'http://192.168.31.154:8888/PARENTSERVICE'
-let host = 'www.api.jichuangsi.com/'
+// let host = 'www.api.jichuangsi.com/'
 
 
 
@@ -252,25 +252,25 @@ export function sendParentMessage(teacherId,teacherName,content) {
 // 新闻列表
 export function data(status,pageindex,pagesize) {
     return axios({
-        method: 'post',
-        url: host+'/parentjournalism/getlist.php?status='+status+'&pageindex='+pageindex+'&pagesize='+pagesize,
-        // headers: {'accessToken': localStorage.getItem('token')}
+        method: 'GET',
+        url: api+'/news/getNewsList?status='+status+'&pageindex='+pageindex+'&pagesize='+pagesize,
+        headers: {'accessToken': localStorage.getItem('token')}
     });
 }
 // 新闻详情
 export function details(infoid) {
     return axios({
-        method: 'post',
-        url: host+'/parentjournalism/getinfo.php?infoid='+infoid,
-        // headers: {'accessToken': localStorage.getItem('token')}
+        method: 'GET',
+        url: api+'/news/getNewsDetail?infoid='+infoid,
+        headers: {'accessToken': localStorage.getItem('token')}
     });
 }
 // 新闻查询
 export function query(title,pageindex,pagesize) {
     return axios({
-        method: 'post',
-        url: host+'/parentjournalism/getlookup.php?title='+title+'&pageindex='+pageindex+'&pagesize='+pagesize,
-        // headers: {'accessToken': localStorage.getItem('token')}
+        method: 'GET',
+        url: api+'/news/queryNews?title='+title+'&pageindex='+pageindex+'&pagesize='+pagesize,
+        headers: {'accessToken': localStorage.getItem('token')}
     });
 }
 

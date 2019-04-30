@@ -61,13 +61,16 @@ export default {
   methods:{
       search(){
           this.nav = []
+          this.pageindex = 0
           this.getdata()
       },
       getdata(){
           query(this.searchtext,this.pageindex,this.pagesize).then(res=>{
-              this.nav.push(...res.data)
-              if(res.data == ''){
-                  this.pageshow = true
+              if(res.data.code == '0010'){
+                  this.nav.push(...res.data.data)
+                    if(res.data.data == ''){
+                        this.pageshow = true
+                    }
               }
           })
       },
