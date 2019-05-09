@@ -8,7 +8,7 @@
         <div class="school">在读学校：{{student.schoolName}}</div>
         <div class="class">所在班级：{{student.className}}</div>
         <div class="change">查看</div>
-        <div class="setbtn" @click="setshow=true">修改</div>
+        <div class="setbtn" @click="setshow=true,title='',newimg='',imgshow=false">修改</div>
         <div class="setbtn" v-if="setshow" @click="set">完成</div>
         <div class="change" v-if="setshow" @click="addshow = true">添加</div>
       </div>
