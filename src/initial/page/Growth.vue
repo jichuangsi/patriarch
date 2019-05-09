@@ -45,7 +45,7 @@
                 <span>成长记录:</span>
                 <textarea name="ipttext" id="ipttext" cols="30" rows="10" v-model="title"></textarea>
             </div>
-          <div class="empty" @click="title=''">清空</div>
+          <div class="empty" @click="title='',newimg='',imgshow=false">清空</div>
           <div class="confirm" @click="confirm">确认</div>
         </div>
     </div>
@@ -123,6 +123,8 @@ export default {
                     Toast('添加成功')
                     this.getdata()
                     this.addshow = false
+                }else{
+                    Toast('添加失败')
                 }
             })
       },
@@ -357,6 +359,7 @@ export default {
       top: 0px;
       left: 0px;
       background-color: rgba(0, 0, 0, 0.3);
+      z-index: 10;
       .add_box {
           width: 680px;
           height: 620px;

@@ -50,7 +50,7 @@ import top from '@/components/top'
 import foot from '@/components/foot'
 import Swiper from 'swiper';
 import {Toast} from 'mint-ui'
-import {updateAttention} from '@/api/api'
+import {updateAttention,getAttentions} from '@/api/api'
 export default {
   name: 'my',
   components: {
@@ -81,6 +81,12 @@ export default {
         if(res.data.code == '0010'){
           this.setshow = false
           Toast('更换成功')
+          getAttentions().then(res=>{
+            if(res.data.code == '0010'){
+              this.studentlist = res.data.data
+              localStorage.setItem('student',JSON.stringify(res.data.data))
+            }
+          })
         }
       })
     }
