@@ -3,9 +3,9 @@
     <top :msg ="msg" :back="back"></top>
     <div class="center">
         <div class="center_nav">
-            <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}" @click="subject(index)">{{item}}</div>
+            <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}">{{item}}</div>
         </div>
-        <div class="center_box" v-for="(item,index) in message_nav" :key="index">
+        <div class="center_box" v-for="(item,index) in message_nav" :key="index" @click="jump(item)">
             <div class="left">
                 <img src="../../assets/img/语文_03.png" alt="" v-if="item.color==0">
                 <img src="../../assets/img/数学_03.png" alt="" v-if="item.color==1">
@@ -21,8 +21,7 @@
                 <div class="title">{{item.message}}</div>
                 <div class="text">2019年3月7日星期四18：06</div>
                 <div class="details">
-                    <div class="status">{{item.status}}</div>
-                    <div class="statustext">{{item.title}}</div>
+                    查看详情
                 </div>
             </div>
         </div>
@@ -39,14 +38,13 @@ export default {
   },
   data () {
     return {
-      msg:'获得嘉奖',
+      msg:'教师评语',
       back:true,
       navindex:0,
-      center_nav:['课堂嘉奖','习题嘉奖','考试嘉奖','期末评语'],
+      center_nav:['期末评语'], //'课堂嘉奖','习题嘉奖','考试嘉奖',
       message_nav:[
-          {color:'0',message:'习题：背影课文预习',status:'优',title:'考试嘉奖'},
-          {color:'1',message:'习题：背影课文预习',status:'优',title:'课堂嘉奖'},
-          {color:'2',message:'习题：背影课文预习',status:'优',title:'习题嘉奖'},
+          {color:'0',message:'期末评语：初一上学期'},
+          {color:'0',message:'期末评语：初一下学期'},
       ]
     }
   },
@@ -54,9 +52,15 @@ export default {
 
   },
   methods:{
-      subject(index){
-          this.navindex = index
+      jump(item){
+        this.$router.push({
+            path:'/evaluation',
+            query:{
+                text:item.message
+            }
+        })
       }
+
   }
 }
 </script>
@@ -128,29 +132,14 @@ export default {
               }
               .details {
                   position: absolute;
-                  top: 0px;
+                  top: 39px;
                   right: 0px;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  .status {
-                      width: 33px;
-                      height: 33px;
-                      line-height: 33px;
-                      text-align: center;
-                      font-size: 24px;
-                      color: #fff;  
-                      border-radius: 50%;
-                      background-color: #69d4c4;
-                  }
-                  .statustext {
-                      margin-top: 10px;
-                      color: #666;
-                  }
-                .orange {
-                    background-color: #ef7c3d;
-                }
+                  padding: 5px 20px;
+                  border-radius: 15px;
+                  background-color: #3d72fe;
+                  color: #fff;
+                  font-size: 20px;
+                  font-weight: 500;
               }
           }
       }

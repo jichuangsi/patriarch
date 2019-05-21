@@ -2,7 +2,7 @@
   <div class="Growth">
     <top :msg ="msg" :back="back"></top>
     <div class="data_box">
-      <div class="left"></div>
+      <div class="left"><img src="../../assets/img/男学生.png" alt=""></div>
       <div class="right">
         <div class="name">关联学生：{{student.studentName}}</div>
         <div class="school">在读学校：{{student.schoolName}}</div>
@@ -236,6 +236,10 @@ export default {
       height: 220px;
       border-radius: 20px;
       background-color: #666;
+      img {
+          width: 100%;
+          height: 100%;
+      }
     }
     .right {
       margin-left: 21px;

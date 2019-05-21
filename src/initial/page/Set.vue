@@ -17,7 +17,7 @@
     </div>
     <h3>关联管理</h3>
     <div class="data_box" v-for="(item,index) in studentlist" :key="index">
-      <div class="left"></div>
+      <div class="left"><img src="../../assets/img/男学生.png" alt=""></div>
       <div class="right">
         <div class="name">关联学生：{{item.studentName}}</div>
         <div class="school">在读学校：{{item.schoolName}}</div>
@@ -249,6 +249,10 @@ export default {
       height: 132px;
       border-radius: 20px;
       background-color: #666;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     .right {
       margin-left: 21px;

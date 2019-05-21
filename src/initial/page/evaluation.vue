@@ -4,7 +4,7 @@
     <div class="center">
       <div class="nav">
         <div class="nav_box">
-          <div class="left"></div>
+          <div class="left"><img src="../../assets/img/男老师.png" ></div>
           <div class="right">
             <div class="name">老师姓名：金灿灿</div>
             <div class="subject">任教科目：数学</div>
@@ -30,9 +30,13 @@ export default {
   },
   data() {
     return {
-      msg: "期末评语：初一上学期",
+      msg: "期末评语",
       back:true
     };
+  },
+  mounted(){
+    // console.log(this.$route.query.text)
+    this.msg = this.$route.query.text
   }
 };
 </script>
@@ -57,6 +61,10 @@ export default {
           height: 164px;
           border-radius: 20px;
           background-color: #666;
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
         .right {
           flex: 1;

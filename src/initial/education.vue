@@ -19,7 +19,8 @@
                 <mt-loadmore :auto-fill="false" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
                     <div class="down" v-for="(item,index) in nav" :key="index" @click="jump(item)">
                         <div class="left">
-                            <img :src="item.picurl.indexOf(',')!=-1?item.picurl.split(',')[0]:item.picurl" alt="">
+                            <!-- item.picurl.indexOf(',')!=-1?item.picurl.split(',')[0]:item.picurl -->
+                            <img :src="item.picurl?item.picurl:imgsrc" alt="">
                         </div>
                         <div class="right">
                             <div class="title" v-html="item.title"></div>
@@ -58,6 +59,7 @@ export default {
   },
   data () {
     return {
+      imgsrc:require('../assets/img/新闻图.png'),
       msg:'教育头条',
       back:false,
       current:2,
@@ -91,6 +93,7 @@ export default {
           this.pageshow = false
           this.allLoaded = false
           this.getdata()
+          return
       },
       Parentbtn(){
           this.btn = 2
@@ -99,6 +102,7 @@ export default {
           this.pageshow = false
           this.allLoaded = false
           this.getdata()
+          return
       },
       jump(item){
           this.$router.push({path:'/News',query:{id:item.id}})
@@ -111,6 +115,7 @@ export default {
             this.pageindex++
             this.getdata()
             this.$refs.loadmore.onBottomLoaded()
+            return
         }
     },
   }
@@ -230,16 +235,22 @@ export default {
                     flex: 1;
                     margin-left: 29px;
                     .title {
-                        width: 200px;
-                        height: 34px;
+                        // width: 200px;
+                        // height: 34px;
                         line-height: 34px;
                         font-size: 28px;
                         font-weight: 700;
                         color: #333;
                         margin-top: 30px;
-                        white-space: nowrap;
-                        text-overflow:ellipsis;
-                        overflow: hidden; 
+                        // white-space: nowrap;
+                        // text-overflow:ellipsis;
+                        // overflow: hidden; 
+                        overflow:hidden;
+                        display:-webkit-box; //将对象作为弹性伸缩盒子模型显示;
+                        text-overflow:ellipsis; //溢出部分用省略号代替
+                        -webkit-line-clamp:2; //设置文本显示两行
+                        -webkit-box-orient:vertical;//从上到下排列子元素;
+                        white-space:normal;
                     }
                     .text {
                         width: 400px;
@@ -254,9 +265,11 @@ export default {
                         overflow: hidden; 
                     }
                     .nav {
+                            position: absolute;
+                            bottom: 20px;
                         div {
                             display: inline-block;
-                            margin-top: 96px;
+                            // margin-top: 96px;
                             i {
                                 vertical-align: middle;
                                 font-size: 26px;

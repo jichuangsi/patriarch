@@ -19,7 +19,7 @@
                     <span v-if="item.noticeType=='C'">校园通知：{{item.title}}</span>
                 </div>
                 <div class="text">{{item.createdTime}}</div>
-                <div class="details" v-if="!delshow||startindex!=index">查看详情</div>
+                <div class="details" v-if="!delshow||startindex!=index||item.noticeType!='S'">查看详情</div>
                 <div class="del" :class="{delbox:delshow&&startindex==index}" @click.stop="del(item.id)"></div>
             </div>
         </div>

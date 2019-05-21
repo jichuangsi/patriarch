@@ -3,7 +3,7 @@ import Vue from 'vue'
 // let api = 'http://192.168.31.154:7979'
 let api = 'http://api.jichuangsi.com/PARENTSERVICE'
 // let api = 'http://192.168.31.154:8888/PARENTSERVICE'
-// let host = 'www.api.jichuangsi.com/'
+// let host = 'http://192.168.31.56:7979'
 
 
 
@@ -187,6 +187,38 @@ export function updateAttention(studentId) {
     return axios({
         method: 'GET',
         url: api+`/studentInfo/updateAttention/${studentId}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+//查看学生在校情况（考试）
+export function getTestHistory(studentId,pageIndex,pageSize,status) {
+    return axios({
+        method: 'POST',
+        url: api+`/SchoolPerformance/getTestHistory`,
+        data:{
+            studentId,pageIndex,pageSize,status
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//查看学生在校情况（课堂）
+export function getCourseHistory(studentId,pageNum,pageSize) {
+    return axios({
+        method: 'POST',
+        url: api+`/SchoolPerformance/getCourseHistory`,
+        data:{
+            studentId,pageNum,pageSize
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//查看学生在校情况（点赞）
+export function getCourseCommend(studentId,pageSize,pageNum) {
+    return axios({
+        method: 'POST',
+        url: api+`/SchoolPerformance/getCourseCommend?studentId=`+studentId+'&pageSize='+pageSize+'&pageNum='+pageNum,
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }

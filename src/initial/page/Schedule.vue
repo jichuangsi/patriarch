@@ -36,7 +36,7 @@ export default {
       str: '',
       className:'',
       nav:[],
-      statustext:''
+      statustext:'暂无数据'
     }
   },
   methods:{
