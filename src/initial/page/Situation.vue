@@ -5,6 +5,7 @@
         <div class="center_nav">
            <div v-for="(item,index) in center_nav" :key="index" :class="{center_color:navindex==index}" @click="subject(index)">{{item}}</div>
         </div>
+        <div id="content">
         <mt-loadmore :auto-fill="false" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
         <div class="center_box" v-for="(item,index) in message_nav" :key="index">
             <div class="left">
@@ -19,7 +20,8 @@
                 <img src="../../assets/img/化学_03.png" alt="" v-if="item.subjectName=='化学'">
             </div>
             <div class="right">
-                <div class="title">{{item.subjectName}}：{{item.courseName}}</div>
+                <div class="title" v-if="navindex != 1">{{item.subjectName}}：{{item.courseName}}</div>
+                <div class="title" v-if="navindex == 1">{{item.subjectName}}：{{item.testName}}</div>
                 <div class="text" v-if="navindex != 1">{{item.courseEndTime}}</div>
                 <div class="text" v-if="navindex == 1">{{item.testEndTime}}</div>
                 <div class="details">
@@ -33,6 +35,7 @@
         <div class="more" v-if="!pageshow">---上拉加载更多---</div>
         <div class="more" v-if="pageshow">---没有更多---</div>
         </mt-loadmore>
+        </div>
     </div>
   </div>
 </template>
@@ -69,6 +72,9 @@ export default {
           this.navindex = index
           this.pageshow = false
           this.allLoaded = false
+          this.pageNum = 1
+          this.message_nav = []
+          console.log(132)
           if(index == 0) {
               this.getCoursedata()
           }
@@ -80,12 +86,12 @@ export default {
           }
       },
       loadBottom(){
-          console.log(123)
           if(this.pageshow){
             this.allLoaded = true
             this.$refs.loadmore.onBottomLoaded()
           }else{
-            this.pagenum++
+            this.pageNum++
+
             if(this.navindex == 0) {
                 this.getCoursedata()
             }
@@ -101,14 +107,13 @@ export default {
       },
       //课堂情况
       getCoursedata(){
-          getCourseHistory(this.student[0].studentId).then(res=>{
-              console.log(res)
+          getCourseHistory(this.student[0].studentId,this.pageNum,this.pageSize).then(res=>{
               if(res.data.code == '0010'){
                   this.message_nav.push(...res.data.data.content)
                   for (let i = 0; i<this.message_nav.length;i++){
                       this.message_nav[i].courseEndTime = this.getLocalTime(this.message_nav[i].courseEndTime)
                   }
-                  if(res.data.data == ''){
+                  if(res.data.data.content == ''){
                       this.pageshow = true
                   }
               }
@@ -122,7 +127,7 @@ export default {
                     for (let i = 0; i<this.message_nav.length;i++){
                         this.message_nav[i].testEndTime = this.getLocalTime(this.message_nav[i].testEndTime)
                     }
-                  if(res.data.data == ''){
+                  if(res.data.data.content == ''){
                       this.pageshow = true
                   }
                 }
@@ -132,7 +137,7 @@ export default {
       getCommenddata(){
           getCourseCommend(this.student[0].studentId,this.pageSize,this.pageNum).then(res=>{
                   if(res.data.code == '0010'){
-                    this.message_nav.push(...res.data.data.content)
+                    this.message_nav.push(...res.data.data)
                     for (let i = 0; i<this.message_nav.length;i++){
                         this.message_nav[i].courseEndTime = this.getLocalTime(this.message_nav[i].courseEndTime)
                     }
@@ -249,5 +254,8 @@ export default {
 }
 .more {
     text-align: center;
+}
+#content {
+    overflow: scroll;
 }
 </style>
