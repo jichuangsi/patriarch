@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import top from '@/components/top'
 import foot from '@/components/foot'
 import index from '@/initial/index'
+import LongIndex from '@/initial/Long/LongIndex'
+import Longwait from '@/initial/Long/Longwait'
 import message from '@/initial/message'
 import education from '@/initial/education'
 import overview from '@/initial/overview'
@@ -30,6 +32,16 @@ export default new Router({
       path: '/',
       name: 'index',
       component: index
+    },
+    {
+      path: '/LongIndex',
+      name: 'LongIndex',
+      component: LongIndex
+    },
+    {
+      path: '/Longwait',
+      name: 'Longwait',
+      component: Longwait
     },
     {
       path: '/message',

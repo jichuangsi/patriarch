@@ -39,9 +39,15 @@ axios.interceptors.response.use(response => {
 
           case '0031': //与后台约定登录失效的返回码,根据实际情况处理
           localStorage.removeItem('token')
-              router.replace({
-                  path: '/'
-              })
+          if(localStorage.getItem('position')){
+            router.replace({
+              path: '/Longwait'
+            })
+          }else{
+            router.replace({
+              path: '/'
+            })
+          }
       }
   }
   return response;

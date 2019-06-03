@@ -56,7 +56,7 @@
 
 <script>
 import top from "@/components/top";
-import {getStudentCourseScore,getStudentHomeworkScore} from '@/api/api'
+import {getStudentCourseScore,getStudentHomeworkScore,getStudentTestScore} from '@/api/api'
 export default {
   name: "Report",
   components: {
@@ -96,12 +96,16 @@ export default {
     this.getdata()
   },
   methods: {
+    GetDateStr(AddDayCount) { 
+        var date = new Date(); 
+        date.setDate(date.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+        var month = date.getMonth()+1;//获取当前月份的日期 
+        var day = date.getDate(); 
+        return month+'月'+day+'日'; 
+    },
     getdata(){
-      let date = new Date();
-      let month = date.getMonth() + 1;
-      let day = date.getDate();
-      this.time_text = month+'月'+day+'日'
-      this.time_nav = [{text:month+'月'+day+'日'},{text:month+'月'+(Number(day)-1)+'日'},{text:month+'月'+(Number(day)-2)+'日'},{text:month+'月'+(Number(day)-3)+'日'},{text:month+'月'+(Number(day)-4)+'日'}]
+      this.time_text = this.GetDateStr(0)
+      this.time_nav = [{text:this.GetDateStr(0)},{text:this.GetDateStr(-1)},{text:this.GetDateStr(-2)},{text:this.GetDateStr(-3)},{text:this.GetDateStr(-4)}]
       this.studentId = localStorage.getItem('student')?JSON.parse(localStorage.getItem('student'))[0].studentId:''
       for(let i = 0 ; i < this.time_nav.length; i++){
         this.time_nav[i].stamp = this.timestamp(i)
@@ -117,6 +121,8 @@ export default {
         this.CourseScore()
       }else if(this.navindex == 1){
         this.HomeworkScore()
+      }else if(this.navindex == 2){
+        this.StudentTestScore()
       }
     },
     subjectnav(index,val) {
@@ -126,6 +132,8 @@ export default {
         this.CourseScore()
       }else if(this.navindex == 1){
         this.HomeworkScore()
+      }else if(this.navindex == 2){
+        this.StudentTestScore()
       }
     },
     timenav(val){
@@ -154,6 +162,8 @@ export default {
         this.CourseScore()
       }else if(this.navindex == 1){
         this.HomeworkScore()
+      }else if(this.navindex == 2){
+        this.StudentTestScore()
       }
     },
     drawLine () {
@@ -251,7 +261,26 @@ export default {
           this.drawLine()
         }
       })
-    }
+    },
+    StudentTestScore(){
+      getStudentTestScore(this.studentId,this.stamp_arr,this.subject).then(res=>{
+        console.log(res)
+        if(res.data.code == '0010'){
+          let arr1= []
+          let arr2= []
+          let arr3= []
+          for(let j = 0 ;j<res.data.data.length;j++){
+            arr1.push({id:j+1,value:[res.data.data[j].knowledgeName,(Number(res.data.data[j].knowledgeRate)*100).toFixed()+'%',(Number(res.data.data[j].studentRightRate)*100).toFixed()+'%',(Number(res.data.data[j].classRightAvgRate)*100).toFixed()+'%']}) 
+            arr2.push(res.data.data[j].knowledgeName)
+            arr3.push({value:(Number(res.data.data[j].knowledgeRate)*100).toFixed(),name:res.data.data[j].knowledgeName})
+          }
+          this.tabletd = arr1
+          this.dataname = arr2
+          this.datalist = arr3
+          this.drawLine()
+        }
+      })
+    },
   }
 };
 </script>
@@ -323,7 +352,7 @@ export default {
     }
     .echart{
       width: 100%;
-      height: 500px;
+      height: 1000px;
       margin: 0px auto;
       #myChart {
         width: 100% !important;

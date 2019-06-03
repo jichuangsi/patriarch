@@ -182,6 +182,29 @@ export function getStudentHomeworkScore(studentId,statisticsTimes,subjectName) {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+// 查看学生的各科考试成绩
+export function getStudentTestScore(studentId,statisticsTimes,subjectName) {
+    return axios({
+        method: 'POST',
+        url: api+`/studentInfo/getStudentTestScore`,
+        data:{
+            studentId,statisticsTimes,subjectName
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+// 查看学生的各科上课点赞
+export function getCourseCommendTime(studentId,statisticsTimes) {
+    return axios({
+        method: 'POST',
+        url: api+`/SchoolPerformance/getCourseCommendTime?studentId=`+studentId+'&statisticsTimes='+statisticsTimes,
+        // data:{
+        //     studentId,statisticsTimes,subjectName
+        // },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
 // 更换关注的学生
 export function updateAttention(studentId) {
     return axios({

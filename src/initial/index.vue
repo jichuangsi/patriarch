@@ -72,7 +72,6 @@ export default {
       this.$store.commit('TEACHER',item)
       this.$router.push({
         path:'/leaveWord'
-        
       })
     },
     getdata(){
