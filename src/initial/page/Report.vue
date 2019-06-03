@@ -212,6 +212,7 @@ export default {
                 show : false
               }
             },
+            y:'top',
             type: 'pie',
             radius: [50, 80],
             center: ['50%', '40%'],
